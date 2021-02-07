@@ -1,0 +1,5 @@
+/client/cmake-build-debug/
+/server/cmake-build-debug/
+/client/client_output/
+/server/server_output/
+
