@@ -6,12 +6,13 @@
 namespace comm {
     class CommunicationCentre {
     public:
+        CommunicationCentre();
         void init() noexcept(false);
-        void startListening() noexcept(false);
-        void stopListening() noexcept(false);
     private:
-        struct sockaddr_in address;
-        const unsigned int port;
+        struct sockaddr_in m_address;
+        const unsigned int m_port = 8080;
+        int serverFd;
+        const int m_option = 1;
     };
 }
 

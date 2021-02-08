@@ -1,14 +1,15 @@
-//
-// Created by poler on 2/8/21.
-//
-
 #ifndef CHESS_GAME_H
 #define CHESS_GAME_H
 
+#include <vector>
 
-class Game {
+namespace logic {
+    class Game {
+    public:
+    private:
+    };
+}
 
-};
 
 
 #endif //CHESS_GAME_H
