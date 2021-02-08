@@ -5,5 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 include(${wxWidgets_USE_FILE})
-add_executable(client app/main.cpp)
+include_directories(include)
+add_executable(client src/app/Launcher.cpp include/app/Launcher.h src/chessGUI/ChessFrame.cpp include/chessGUI/ChessFrame.h)
 target_link_libraries(client ${wxWidgets_LIBRARIES})
