@@ -15,8 +15,9 @@ namespace chessGUI {
 
         wxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
         sizer->Add(&gameList, 1, wxEXPAND | wxLEFT | wxRIGHT);
-        std::for_each(buttons.begin(), buttons.end(), [&](auto& button){
-            button.Create(this, wxID_ANY, "Hello");
+        int x;
+        std::for_each(buttons.begin(), buttons.end(), [&, i = 0](auto& button) mutable {
+            button.Create(this, wxID_ANY, std::string{s_butTitles[i++]});
             butSizer->Add(&button, 1, wxEXPAND);
         });
         sizer->Add(butSizer, 1, wxEXPAND);

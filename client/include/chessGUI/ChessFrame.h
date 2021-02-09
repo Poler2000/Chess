@@ -14,6 +14,7 @@ namespace chessGUI {
         ChessFrame();
     private:
         wxDECLARE_EVENT_TABLE();
+        constexpr static std::string_view s_butTitles[] = {"Create Game", "Join Game", "Watch as spectator", "Load Replay"};
         constexpr static char s_defaultTitle[] = "Hello Chess!";
         constexpr static unsigned int s_defWidth = 960;
         constexpr static unsigned int s_defHeight = 720;
