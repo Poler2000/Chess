@@ -3,6 +3,7 @@
 
 #include <wx/wxprec.h>
 #include <string>
+#include <array>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
@@ -18,6 +19,8 @@ namespace chessGUI {
         constexpr static unsigned int s_defHeight = 720;
         constexpr static int s_defXPos = 10;
         constexpr static int s_defYPos = 10;
+        std::array<wxButton, 4> buttons;
+        wxListBox gameList;
     };
 }
 

@@ -11,8 +11,8 @@ bool Launcher::OnInit() {
     m_chessFrame = new chessGUI::ChessFrame();
     m_chessFrame->Show();
 
-    m_connector.connect();
+   // m_connector.connect();
     std::string msg("Hello... it's me...");
-    m_connector.send(msg);
+    //m_connector.send(msg);
     return wxAppConsoleBase::OnInit();
 }
