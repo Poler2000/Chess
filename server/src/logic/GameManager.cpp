@@ -1,5 +1,25 @@
-//
-// Created by poler on 2/8/21.
-//
+#include "logic/GameManager.h"
+#include "communication/CommException.h"
+#include <iostream>
 
-#include "../../include/logic/GameManager.h"
+namespace logic {
+
+    GameManager::GameManager() = default;
+
+    void GameManager::init() {
+        createNewGame();
+        try {
+            communicationCentre.init();
+            communicationCentre.startListening(1);
+        }
+        catch (comm::CommException &ex) {
+            std::cout << ex.what();
+        }
+    }
+
+    void GameManager::createNewGame() {
+        games.emplace_back(Game());
+    }
+
+    GameManager::~GameManager() = default;
+}

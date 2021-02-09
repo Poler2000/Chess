@@ -8,11 +8,16 @@ namespace comm {
     public:
         CommunicationCentre();
         void init() noexcept(false);
+        void startListening(int maxClients) noexcept(false);
+        void stopListening();
     private:
         struct sockaddr_in m_address;
         const unsigned int m_port = 8080;
         int serverFd;
         const int m_option = 1;
+        bool active;
+
+        void handleConnection(int sockFd);
     };
 }
 

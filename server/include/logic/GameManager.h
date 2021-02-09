@@ -2,6 +2,7 @@
 #define CHESS_GAMEMANAGER_H
 
 #include "Game.h"
+#include "communication/CommunicationCentre.h"
 #include <vector>
 #include <thread>
 
@@ -14,6 +15,8 @@ namespace logic {
 
     private:
         void createNewGame();
+        std::vector<Game> games;
+        comm::CommunicationCentre communicationCentre;
     };
 }
 
