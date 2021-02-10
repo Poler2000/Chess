@@ -4,6 +4,7 @@
 #include <wx/wxprec.h>
 #include <string>
 #include <array>
+#include "ChessField.h"
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
@@ -21,6 +22,7 @@ namespace chessGUI {
         constexpr static int s_defXPos = 10;
         constexpr static int s_defYPos = 10;
         std::array<wxButton, 4> buttons;
+        std::array<ChessField, 64> fields;
         wxListBox gameList;
     };
 }
