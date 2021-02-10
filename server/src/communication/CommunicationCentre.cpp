@@ -9,7 +9,10 @@
 
 namespace comm {
 
-    CommunicationCentre::CommunicationCentre() : active(false) {}
+    CommunicationCentre::CommunicationCentre() : active(false), manager(nullptr) {}
+
+    CommunicationCentre::CommunicationCentre(const logic::GameManager* const manager)
+            : active(false), manager(manager) {}
 
     void CommunicationCentre::init() noexcept(false) {
         if ((serverFd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
@@ -39,16 +42,13 @@ namespace comm {
         int addrLen = sizeof(m_address);
         puts("Waiting for connections ...");
 
-        while (true) {
+        while (active) {
             int newSocket;
             if ((newSocket = accept(serverFd, (struct sockaddr *)&m_address, (socklen_t*)&addrLen)) < 0) {
                 throw comm::CommException("Couldn't accept connection");
             }
-
             handleConnection(newSocket);
         }
-
-
     }
 
     void CommunicationCentre::stopListening() {
@@ -58,8 +58,7 @@ namespace comm {
     void CommunicationCentre::handleConnection(int sockFd) {
         char test[256];
         bzero(test, 256);
-        while(true)
-        {
+        while(true) {
             bzero(test, 256);
             int n = read(sockFd, test, 255);
             if (n < 0) {
@@ -69,4 +68,6 @@ namespace comm {
         }
         close(sockFd);
     }
+
+
 }

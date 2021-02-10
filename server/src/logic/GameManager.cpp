@@ -4,22 +4,28 @@
 
 namespace logic {
 
-    GameManager::GameManager() = default;
+    GameManager::GameManager()
+        : m_communicationCentre(new comm::CommunicationCentre(this)) {}
+
+    GameManager::~GameManager() = default;
 
     void GameManager::init() {
-        createNewGame();
         try {
-            communicationCentre.init();
-            communicationCentre.startListening(1);
+            m_communicationCentre->init();
+            m_communicationCentre->startListening(s_maxClients);
         }
-        catch (comm::CommException &ex) {
+        catch (comm::CommException& ex) {
             std::cout << ex.what();
         }
     }
 
     void GameManager::createNewGame() {
-        games.emplace_back(Game());
+        m_games.emplace_back(Game());
     }
 
-    GameManager::~GameManager() = default;
+    void GameManager::run() {
+
+    }
+
+
 }
