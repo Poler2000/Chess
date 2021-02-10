@@ -8,10 +8,12 @@
 wxIMPLEMENT_APP(Launcher);
 
 bool Launcher::OnInit() {
+    m_mainMenu = new chessGUI::MainMenu();
+    m_mainMenu->Show();
     m_chessFrame = new chessGUI::ChessFrame();
     m_chessFrame->Show();
-
-   // m_connector.connect();
+    m_mainMenu->getOption();
+    // m_connector.connect();
     std::string msg("Hello... it's me...");
     //m_connector.send(msg);
     return wxAppConsoleBase::OnInit();
