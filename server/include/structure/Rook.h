@@ -1,12 +1,10 @@
-#ifndef CHESS_QUEEN_H
-#define CHESS_QUEEN_H
-
-#include "Figure.h"
+#ifndef CHESS_ROOK_H
+#define CHESS_ROOK_H
 
 namespace structure {
-    class Queen : public Figure {
+    class Rook : public Figure {
     public:
-        Queen(const unsigned int x, const unsigned int y, const int colour) : Figure(x, y, colour) {
+        Rook(const unsigned int x, const unsigned int y, const int colour) : Figure(x, y, colour) {
             m_movement = std::make_shared<Movement>(Movement{
                     true,
                     true,
@@ -19,6 +17,4 @@ namespace structure {
     };
 }
 
-
-
-#endif //CHESS_QUEEN_H
+#endif //CHESS_ROOK_H
