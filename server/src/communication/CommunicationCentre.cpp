@@ -11,7 +11,7 @@ namespace comm {
 
     CommunicationCentre::CommunicationCentre() : active(false), manager(nullptr) {}
 
-    CommunicationCentre::CommunicationCentre(const logic::GameManager* const manager)
+    CommunicationCentre::CommunicationCentre(logic::GameManager* const manager)
             : active(false), manager(manager) {}
 
     void CommunicationCentre::init() noexcept(false) {
@@ -57,17 +57,19 @@ namespace comm {
 
     void CommunicationCentre::handleConnection(int sockFd) {
         char test[256];
-        bzero(test, 256);
         while(true) {
             bzero(test, 256);
             int n = read(sockFd, test, 255);
             if (n < 0) {
                 break;
             }
-            printf("Here is the message: %s\n",test);
+            manager->processMessage(test, sockFd);
         }
         close(sockFd);
     }
 
+    void CommunicationCentre::sendPortInfo(unsigned int port, int clientFd) {
+
+    }
 
 }

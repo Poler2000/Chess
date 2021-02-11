@@ -6,7 +6,11 @@
 namespace logic {
     class Game {
     public:
-    private:
+        const unsigned int getId() const;
+
+        int getPort();
+
+        bool canAddClient();
     };
 }
 
