@@ -6,6 +6,7 @@
 #include <vector>
 #include <thread>
 #include <mutex>
+#include <communication/Message.h>
 
 namespace comm {
     class CommunicationCentre;
@@ -19,7 +20,7 @@ namespace logic {
         void init();
         void run();
         void processMessage(const std::string& msg, int clientFd);
-        void processMessage(const char* msg, int clientFd);
+        void processMessage(const comm::Message &msg, const int clientFd);
     private:
         constexpr static uint32_t s_maxClients = 16;
         void createNewGame(const int clientFd);
@@ -29,6 +30,8 @@ namespace logic {
         std::mutex gmMutex;
         std::vector<Game> m_games;
         std::unique_ptr<comm::CommunicationCentre> m_communicationCentre;
+
+
     };
 }
 

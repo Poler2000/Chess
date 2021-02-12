@@ -1,6 +1,8 @@
 #include "logic/GameManager.h"
 #include "communication/CommException.h"
 #include <iostream>
+#include <communication/Message.h>
+#include <fstream>
 
 namespace logic {
 
@@ -27,6 +29,7 @@ namespace logic {
     void GameManager::run() {
         while(true) {
 
+
         }
     }
 
@@ -36,9 +39,10 @@ namespace logic {
         gmMutex.unlock();
     }
 
-    void GameManager::processMessage(const char *msg, const int clientFd) {
-        std::string m{msg};
-        processMessage(m, clientFd);
+    void GameManager::processMessage(const comm::Message& msg, const int clientFd) {
+       // std::string m{msg};
+        //processMessage(m, clientFd);
+        std::cout << "Received\n";
     }
 
     void GameManager::addClientToGame(const int gameId, const int clientFd) {

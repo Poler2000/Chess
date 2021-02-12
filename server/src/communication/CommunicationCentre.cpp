@@ -6,6 +6,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <communication/Message.h>
+#include <fstream>
 
 namespace comm {
 
@@ -47,7 +49,10 @@ namespace comm {
             if ((newSocket = accept(serverFd, (struct sockaddr *)&m_address, (socklen_t*)&addrLen)) < 0) {
                 throw comm::CommException("Couldn't accept connection");
             }
-            handleConnection(newSocket);
+            else {
+                std::cout << "connected\n";
+            }
+            threads.emplace_back(std::thread(&CommunicationCentre::handleConnection, this, newSocket));
         }
     }
 
@@ -55,15 +60,29 @@ namespace comm {
         active = false;
     }
 
+    class ClientIO {
+    public:
+    };
     void CommunicationCentre::handleConnection(int sockFd) {
-        char test[256];
         while(true) {
-            bzero(test, 256);
-            int n = read(sockFd, test, 255);
-            if (n < 0) {
+            std::cout << "waiting!";
+            char buff[256];
+            if(read(sockFd, buff, 1024) < 0) {
+                std::cout << "That's the end for today!\n";
                 break;
             }
-            manager->processMessage(test, sockFd);
+            sleep(2);
+            std::cout << "waiting!";
+            std::flush(std::cout);
+            std::string file = std::to_string(sockFd);
+            std::ifstream is("file.dat");
+            cereal::JSONInputArchive archive(is);
+
+            comm::Message msg("");
+
+            archive(msg);
+            std::cout << msg.getType() << '\n';
+            manager->processMessage(msg, sockFd);
         }
         close(sockFd);
     }

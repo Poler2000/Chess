@@ -4,6 +4,7 @@
 #include "logic/GameManager.h"
 #include <netinet/in.h>
 #include <memory>
+#include <thread>
 
 namespace logic {
     class GameManager;
@@ -28,6 +29,7 @@ namespace comm {
         int serverFd;
         const int m_option = 1;
         volatile bool active;
+        std::vector<std::thread> threads;
 
         void handleConnection(int sockFd);
     };

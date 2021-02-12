@@ -4,6 +4,9 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
+#include "communication/Message.h"
+#include <fstream>
+
 
 namespace comm {
 
@@ -27,8 +30,17 @@ namespace comm {
         }
     }
 
-    void Connector::send(std::string &msg) const noexcept(false) {
-        ::send(m_sock , msg.c_str() , msg.length() , 0);
+    void Connector::send(const Message& msg) const noexcept(false) {
+        //::send(m_sock , msg.c_str() , msg.length() , 0);
+        {
+            std::cout << "hey\n";
+            std::string file = std::to_string(m_sock);
+            std::ofstream os("file.dat");
+            cereal::JSONOutputArchive archive(os);
+            archive(msg);
+            std::cout << "hey0\n";
+        }
+        ::send(m_sock , " " , strlen(" ") , 0);
         printf("Hello message sent\n");
     }
 }
