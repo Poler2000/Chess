@@ -67,15 +67,14 @@ namespace comm {
         while(true) {
             std::cout << "waiting!";
             char buff[256];
-            if(read(sockFd, buff, 1024) < 0) {
+            if(read(sockFd, buff, 255) < 0) {
                 std::cout << "That's the end for today!\n";
                 break;
             }
+            std::string file(buff);
             sleep(2);
-            std::cout << "waiting!";
             std::flush(std::cout);
-            std::string file = std::to_string(sockFd);
-            std::ifstream is("file.dat");
+            std::ifstream is(file);
             cereal::JSONInputArchive archive(is);
 
             comm::Message msg("");

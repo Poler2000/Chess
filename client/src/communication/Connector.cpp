@@ -31,16 +31,11 @@ namespace comm {
     }
 
     void Connector::send(const Message& msg) const noexcept(false) {
-        //::send(m_sock , msg.c_str() , msg.length() , 0);
-        {
-            std::cout << "hey\n";
-            std::string file = std::to_string(m_sock);
-            std::ofstream os("file.dat");
-            cereal::JSONOutputArchive archive(os);
-            archive(msg);
-            std::cout << "hey0\n";
-        }
-        ::send(m_sock , " " , strlen(" ") , 0);
-        printf("Hello message sent\n");
+        std::string file = std::to_string(m_sock);
+        std::string newMsg = "../../messages/" + file;
+        std::ofstream os(newMsg);
+        ::send(m_sock, newMsg.c_str(), strlen(newMsg.c_str()), 0);
+        cereal::JSONOutputArchive archive(os);
+        archive(msg);
     }
 }
