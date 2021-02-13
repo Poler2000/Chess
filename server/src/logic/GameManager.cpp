@@ -103,6 +103,7 @@ namespace logic {
         std::for_each(m_games.begin(), m_games.end(), [&](const Game& game){
             msg.addField("id", game.getId());
         });
+        m_communicationCentre->send(msg, fd);
     }
 
 

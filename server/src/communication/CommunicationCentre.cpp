@@ -84,6 +84,7 @@ namespace comm {
     }
 
     void CommunicationCentre::send(const Message& msg, int clientFd) {
+        std::cout << msg.getType() << '\n';
         std::string file = std::to_string(clientFd);
         std::string newMsg = "../../messages/" + file;
         std::ofstream os(newMsg);

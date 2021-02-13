@@ -4,16 +4,26 @@
 #include "chessGUI/ChessFrame.h"
 #include "chessGUI/MainMenu.h"
 #include "communication/Connector.h"
+#include <memory>
+
+namespace comm {
+    class Connector;
+}
 
 class Launcher : public wxApp {
 public:
     virtual bool OnInit();
+    Launcher();
+
+    void processMessage(const comm::Message &msg, const int clientFd);
 
 private:
     constexpr static unsigned int s_defaultPort = 8080;
     chessGUI::ChessFrame* m_chessFrame;
     chessGUI::MainMenu* m_mainMenu;
-    comm::Connector m_connector = comm::Connector(s_defaultPort);
+    std::unique_ptr<comm::Connector> m_connector;
+
+    void requestNewGame(const int clientFd);
 };
 
 #endif //CHESS_LAUNCHER_H
