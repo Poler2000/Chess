@@ -1,6 +1,7 @@
 #ifndef CHESS_COMMUNICATIONCENTRE_H
 #define CHESS_COMMUNICATIONCENTRE_H
 
+#include "Message.h"
 #include "logic/GameManager.h"
 #include <netinet/in.h>
 #include <memory>
@@ -21,7 +22,7 @@ namespace comm {
         void init() noexcept(false);
         void startListening(int maxClients) noexcept(false);
         void stopListening();
-        void send(const Message& msg, int clientFd);
+        void send(const comm::Message& msg, int clientFd);
     private:
         struct sockaddr_in m_address;
         const unsigned int m_port = 8080;

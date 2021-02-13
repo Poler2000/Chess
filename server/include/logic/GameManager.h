@@ -32,6 +32,7 @@ namespace logic {
         std::unique_ptr<comm::CommunicationCentre> m_communicationCentre;
 
 
+        void prepareAndSendListOfGames(const int fd);
     };
 }
 

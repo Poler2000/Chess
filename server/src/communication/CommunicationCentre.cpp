@@ -89,7 +89,7 @@ namespace comm {
         std::ofstream os(newMsg);
         cereal::JSONOutputArchive archive(os);
         ::send(clientFd, newMsg.c_str(), strlen(newMsg.c_str()), 0);
-        archive(os);
+        archive(msg);
     }
 
 }

@@ -2,15 +2,18 @@
 #define CHESS_GAME_H
 
 #include <vector>
+#include "communication/Message.h"
 
 namespace logic {
     class Game {
     public:
-        const unsigned int getId() const;
+        /*const unsigned*/ int getId() const;
 
         int getPort();
-
+        void init();
         bool canAddClient();
+
+        void processMessage(const comm::Message &msg, const int clientFd);
     };
 }
 

@@ -6,13 +6,11 @@
 #include <map>
 
 namespace logic {
-    constexpr uint64_t mix(char m, uint64_t s)
-    {
+    constexpr uint64_t mix(char m, uint64_t s) {
         return ((s<<7) + ~(s>>3)) + ~m;
     }
 
-    constexpr uint64_t hash(const char * m)
-    {
+    constexpr uint64_t hash(const char * m) {
         return (*m) ? mix(*m,hash(m+1)) : 0;
     }
     
@@ -37,8 +35,9 @@ namespace logic {
         m_games.emplace_back(Game());
         comm::Message msg("ReconnectMsg");
         msg.addField("port", m_games.back().getPort());
-        gmMutex.unlock();
         m_communicationCentre->send(msg, clientFd);
+        m_games.back().init();
+        gmMutex.unlock();
     }
 
     void GameManager::run() {
@@ -48,43 +47,48 @@ namespace logic {
         }
     }
 
-    void GameManager::processMessage(const std::string& msg, const int clientFd) {
-        gmMutex.lock();
-
-        gmMutex.unlock();
-    }
-
     void GameManager::processMessage(const comm::Message& msg, const int clientFd) {
         switch(hash(msg.getType().c_str())) {
             case hash("RegisterMsg"):
+                prepareAndSendListOfGames(clientFd);
                 break;
             case hash("CreateGameMsg"):
+                createNewGame(clientFd);
                 break;
             case hash("JoinGameMsg"):
+                if(msg.hasField("gameId")){
+                    addClientToGame(msg.getInt("gameId"), clientFd);
+                }
                 break;
             case hash("SpectateGameMsg"):
+                if(msg.hasField("gameId")){
+                    addAsSpectator(msg.getInt("gameId"), clientFd);
+                }
                 break;
-            case hash("StartGameMsg"):
-                break;
-            case hash("PieceSelectedMsg"):
-                break;
-            case hash("MoveMsg"):
+            default:
+                std::cout << "Incorrect message type\n";
                 break;
         }
         std::cout << "Received\n";
     }
 
     void GameManager::addClientToGame(const int gameId, const int clientFd) {
+        gmMutex.lock();
         auto g = getGameById(gameId);
         if(g.canAddClient()) {
-            m_communicationCentre->sendPortInfo(g.getPort(), clientFd);
+            comm::Message msg("reconnectMsg");
+            msg.addField("port", g.getPort());
+            m_communicationCentre->send(msg, clientFd);
         }
+        gmMutex.unlock();
     }
 
 
     void GameManager::addAsSpectator(const int gameId, const int clientFd) {
         auto g = getGameById(gameId);
-        m_communicationCentre->sendPortInfo(g.getPort(), clientFd);
+        comm::Message msg("reconnectMsg");
+        msg.addField("port", g.getPort());
+        m_communicationCentre->send(msg, clientFd);
     }
 
     // TODO what if no game matches?
@@ -92,6 +96,13 @@ namespace logic {
         auto k = std::find_if(m_games.begin(), m_games.end(),
                               [=](const Game & g) -> bool { return g.getId() == id; });
         return *k;
+    }
+
+    void GameManager::prepareAndSendListOfGames(const int fd) {
+        comm::Message msg("GameListMsg");
+        std::for_each(m_games.begin(), m_games.end(), [&](const Game& game){
+            msg.addField("id", game.getId());
+        });
     }
 
 

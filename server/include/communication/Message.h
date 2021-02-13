@@ -32,6 +32,40 @@ namespace comm {
             return type;
         }
 
+        [[nodiscard]] bool hasField(const std::string &identifier) const {
+            return std::find_if(content.begin(), content.end(),
+                            [&](auto& pair) -> bool {
+                return identifier == pair.first;
+            }) < content.end();
+        }
+
+        [[nodiscard]] int getInt(const std::string &identifier) const noexcept(false) {
+            for(auto it = content.begin(); it != content.end(); it++) {
+                if (it->first == identifier) {
+                    try {
+                        return std::get<int>(it->second);
+                    }
+                    catch(std::bad_variant_access& ex) {
+                        throw ex;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        [[nodiscard]] std::string getString(const std::string &identifier) const noexcept(false) {
+            for(auto it = content.begin(); it != content.end(); it++) {
+                if (it->first == identifier) {
+                    try {
+                        return std::get<std::string>(it->second);
+                    }
+                    catch(std::bad_variant_access& ex) {
+                        throw ex;
+                    }
+                }
+            }
+            return "";
+        }
     };
 }
 
