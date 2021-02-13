@@ -32,9 +32,16 @@ bool Launcher::OnInit() {
 
     m_mainMenu = new chessGUI::MainMenu();
     m_mainMenu->Show();
+    m_mainMenu->
     //m_chessFrame = new chessGUI::ChessFrame();
    // m_chessFrame->Show();
-    //m_mainMenu->getOption();
+    auto op = m_mainMenu->getOption();
+
+    switch (op.optionId) {
+        case chessGUI::MenuOptionValues::CREATE:
+            requestNewGame();
+            break;
+    }
 
     return wxAppConsoleBase::OnInit();
 }
@@ -42,7 +49,8 @@ bool Launcher::OnInit() {
 void Launcher::processMessage(const comm::Message& msg, const int clientFd) {
     switch(hash(msg.getType().c_str())) {
         case hash("GameListMsg"):
-            requestNewGame(clientFd);
+            m_mainMenu->fillGameList(msg);
+            //requestNewGame();
             break;
         case hash("ReconnectMsg"):
             if (msg.hasField("port")) {
@@ -60,7 +68,7 @@ void Launcher::processMessage(const comm::Message& msg, const int clientFd) {
     std::cout << "Received\n";
 }
 
-void Launcher::requestNewGame(const int clientFd) {
+void Launcher::requestNewGame() {
     std::cout << "new game!\n";
     sleep(2);
     comm::Message newMsg("CreateGameMsg");

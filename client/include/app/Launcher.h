@@ -23,7 +23,7 @@ private:
     chessGUI::MainMenu* m_mainMenu;
     std::unique_ptr<comm::Connector> m_connector;
 
-    void requestNewGame(const int clientFd);
+    void requestNewGame();
 };
 
 #endif //CHESS_LAUNCHER_H

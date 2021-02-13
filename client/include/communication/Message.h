@@ -66,6 +66,36 @@ namespace comm {
             }
             return "";
         }
+
+        [[nodiscard]] std::vector<std::string> getStrings(const std::string &identifier) const noexcept(false) {
+            std::vector<std::string> result;
+            for(auto it = content.begin(); it != content.end(); it++) {
+                if (it->first == identifier) {
+                    try {
+                        result.emplace_back(std::get<std::string>(it->second));
+                    }
+                    catch(std::bad_variant_access& ex) {
+                        throw ex;
+                    }
+                }
+            }
+            return result;
+        }
+
+        [[nodiscard]] std::vector<int> getInts(const std::string &identifier) const noexcept(false) {
+            std::vector<int> result;
+            for(auto it = content.begin(); it != content.end(); it++) {
+                if (it->first == identifier) {
+                    try {
+                        result.emplace_back(std::get<int>(it->second));
+                    }
+                    catch(std::bad_variant_access& ex) {
+                        throw ex;
+                    }
+                }
+            }
+            return result;
+        }
     };
 }
 

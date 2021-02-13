@@ -8,6 +8,8 @@
 #include "MenuOption.h"
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
+#include <communication/Message.h>
+
 #endif
 
 namespace chessGUI {
@@ -15,6 +17,11 @@ namespace chessGUI {
     public:
         MainMenu();
         MenuOption getOption() const;
+
+        void addToGameList(int i);
+
+        void fillGameList(const comm::Message &message);
+
     private:
     wxDECLARE_EVENT_TABLE();
         constexpr static std::string_view s_butTitles[] = {"Create Game", "Join Game", "Watch as spectator", "Load Replay"};
@@ -26,7 +33,8 @@ namespace chessGUI {
         std::array<wxButton, 4> buttons;
         wxListBox gameList;
         MenuOption currOption{0, 0};
-        void setOption(MenuOption option);
+
+        void OnButtonClicked(wxCommandEvent &ev);
     };
 }
 

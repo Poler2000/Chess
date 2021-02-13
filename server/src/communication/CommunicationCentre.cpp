@@ -89,8 +89,8 @@ namespace comm {
         std::string newMsg = "../../messages/" + file;
         std::ofstream os(newMsg);
         cereal::JSONOutputArchive archive(os);
-        ::send(clientFd, newMsg.c_str(), strlen(newMsg.c_str()), 0);
         archive(msg);
+        ::send(clientFd, newMsg.c_str(), strlen(newMsg.c_str()), 0);
     }
 
 }
