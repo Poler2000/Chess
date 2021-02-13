@@ -21,7 +21,7 @@ namespace comm {
         void init() noexcept(false);
         void startListening(int maxClients) noexcept(false);
         void stopListening();
-        void sendPortInfo(unsigned int port, int clientFd);
+        void send(const Message& msg, int clientFd);
     private:
         struct sockaddr_in m_address;
         const unsigned int m_port = 8080;

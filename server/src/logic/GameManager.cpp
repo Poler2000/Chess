@@ -3,9 +3,20 @@
 #include <iostream>
 #include <communication/Message.h>
 #include <fstream>
+#include <map>
 
 namespace logic {
+    constexpr uint64_t mix(char m, uint64_t s)
+    {
+        return ((s<<7) + ~(s>>3)) + ~m;
+    }
 
+    constexpr uint64_t hash(const char * m)
+    {
+        return (*m) ? mix(*m,hash(m+1)) : 0;
+    }
+    
+    
     GameManager::GameManager()
         : m_communicationCentre(new comm::CommunicationCentre(this)) {}
 
@@ -22,8 +33,12 @@ namespace logic {
     }
 
     void GameManager::createNewGame(const int clientFd) {
+        gmMutex.lock();
         m_games.emplace_back(Game());
-        m_communicationCentre->sendPortInfo(m_games.back().getPort(), clientFd);
+        comm::Message msg("ReconnectMsg");
+        msg.addField("port", m_games.back().getPort());
+        gmMutex.unlock();
+        m_communicationCentre->send(msg, clientFd);
     }
 
     void GameManager::run() {
@@ -40,8 +55,22 @@ namespace logic {
     }
 
     void GameManager::processMessage(const comm::Message& msg, const int clientFd) {
-       // std::string m{msg};
-        //processMessage(m, clientFd);
+        switch(hash(msg.getType().c_str())) {
+            case hash("RegisterMsg"):
+                break;
+            case hash("CreateGameMsg"):
+                break;
+            case hash("JoinGameMsg"):
+                break;
+            case hash("SpectateGameMsg"):
+                break;
+            case hash("StartGameMsg"):
+                break;
+            case hash("PieceSelectedMsg"):
+                break;
+            case hash("MoveMsg"):
+                break;
+        }
         std::cout << "Received\n";
     }
 

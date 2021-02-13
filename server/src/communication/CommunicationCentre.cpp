@@ -60,9 +60,6 @@ namespace comm {
         active = false;
     }
 
-    class ClientIO {
-    public:
-    };
     void CommunicationCentre::handleConnection(int sockFd) {
         while(true) {
             std::cout << "waiting!";
@@ -86,8 +83,13 @@ namespace comm {
         close(sockFd);
     }
 
-    void CommunicationCentre::sendPortInfo(unsigned int port, int clientFd) {
-
+    void CommunicationCentre::send(const Message& msg, int clientFd) {
+        std::string file = std::to_string(clientFd);
+        std::string newMsg = "../../messages/" + file;
+        std::ofstream os(newMsg);
+        cereal::JSONOutputArchive archive(os);
+        ::send(clientFd, newMsg.c_str(), strlen(newMsg.c_str()), 0);
+        archive(os);
     }
 
 }
