@@ -13,7 +13,8 @@ namespace chessGUI {
         wxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
         sizer->Add(&gameList, 1, wxEXPAND | wxLEFT | wxRIGHT);
         std::for_each(buttons.begin(), buttons.end(), [&, i = 0](auto& button) mutable {
-            button.Create(this, 10000 + i, std::string{s_butTitles[i++]});
+            button.Create(this, 10000 + i, std::string{s_butTitles[i]});
+            i++;
             button.Bind(wxEVT_COMMAND_BUTTON_CLICKED, &MainMenu::OnButtonClicked, this);
             butSizer->Add(&button, 1, wxEXPAND);
         });
@@ -23,7 +24,12 @@ namespace chessGUI {
     }
 
     MenuOption MainMenu::getOption() const {
-        while(currOption.optionId == 0) ;
+
+        while(currOption.optionId == 0) {
+            //std::cout << "w";
+            usleep(100);
+        }
+        std::cout << "\nHello\n";
         return currOption;
     }
 
@@ -32,14 +38,23 @@ namespace chessGUI {
     }
 
     void MainMenu::fillGameList(const comm::Message &message) {
+        std::cout << "erer\n";
         auto ids = message.getInts("id");
+        std::cout << "erer\n";
         std::for_each(ids.begin(), ids.end(), [&](int val){
             addToGameList(val);
         });
     }
 
     void MainMenu::OnButtonClicked(wxCommandEvent& ev) {
-        currOption = {ev.GetId() - 9999, 0};
+        setOption(MenuOption{ev.GetId() - 9999, 0});
+    }
+
+    void MainMenu::setOption(const MenuOption& option) {
+        mtx.lock();
+        currOption = option;
+        std::cout << "changed\n";
+        mtx.unlock();
     }
 
 }

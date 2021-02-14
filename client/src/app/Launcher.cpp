@@ -25,23 +25,16 @@ bool Launcher::OnInit() {
 
     std::cout << "hey\n";
 
+
+    m_mainMenu = new chessGUI::MainMenu();
+    m_mainMenu->Show(true);
+
     m_connector->send(newMsg);
     std::thread t(&comm::Connector::handleConnection, *m_connector);
     t.detach();
     std::cout << "hey\n";
-
-    m_mainMenu = new chessGUI::MainMenu();
-    m_mainMenu->Show();
-    m_mainMenu->
     //m_chessFrame = new chessGUI::ChessFrame();
    // m_chessFrame->Show();
-    auto op = m_mainMenu->getOption();
-
-    switch (op.optionId) {
-        case chessGUI::MenuOptionValues::CREATE:
-            requestNewGame();
-            break;
-    }
 
     return wxAppConsoleBase::OnInit();
 }
@@ -49,12 +42,19 @@ bool Launcher::OnInit() {
 void Launcher::processMessage(const comm::Message& msg, const int clientFd) {
     switch(hash(msg.getType().c_str())) {
         case hash("GameListMsg"):
-            m_mainMenu->fillGameList(msg);
-            //requestNewGame();
+            std::cout << "Ej\n";
+            if (m_mainMenu == nullptr) {
+                std::cout << "Null here";
+            }
+            else {
+                std::cout << "Not Null here";
+                m_mainMenu->fillGameList(msg);
+            }
+            requestNewGame();
             break;
         case hash("ReconnectMsg"):
             if (msg.hasField("port")) {
-                m_connector = std::make_unique<comm::Connector>(msg.getInt("port"));
+                m_connector = std::make_unique<comm::Connector>(msg.getInt("port"), this);
             }
             break;
         case hash("GameStateMsg"):
@@ -75,4 +75,23 @@ void Launcher::requestNewGame() {
     m_connector->send(newMsg);
 }
 
-Launcher::Launcher() : m_connector(std::make_unique<comm::Connector>(s_defaultPort)) {}
+Launcher::Launcher() : m_connector(std::make_unique<comm::Connector>(s_defaultPort, this)) {}
+
+int Launcher::OnRun() {
+    std::cout << "On run\n";
+
+    std::thread t(&Launcher::processOption, this);
+
+    return wxAppBase::OnRun();
+}
+
+void  Launcher::processOption() {
+    auto op = m_mainMenu->getOption();
+    std::cout << "Got option!\n";
+    std::cout << op.optionId << '\n';
+    switch (op.optionId) {
+        case chessGUI::MenuOptionValues::CREATE:
+            requestNewGame();
+            break;
+    }
+}

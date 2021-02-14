@@ -4,13 +4,14 @@
 #include <string>
 #include "Message.h"
 #include "app/Launcher.h"
+#include <memory>
 
 class Launcher;
 
 namespace comm {
     class Connector {
     public:
-        explicit Connector(unsigned int port);
+        Connector(unsigned int port, Launcher* launcher);
         void connect() noexcept(false);
         void send(const comm::Message &msg) const noexcept(false);
         void handleConnection();
@@ -18,7 +19,7 @@ namespace comm {
         const unsigned int m_port;
         int m_sock;
 
-        Launcher* launcher;
+        std::shared_ptr<Launcher> launcher;
     };
 }
 

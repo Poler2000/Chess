@@ -6,6 +6,7 @@
 #include <array>
 #include "ChessField.h"
 #include "MenuOption.h"
+#include <mutex>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #include <communication/Message.h>
@@ -16,7 +17,7 @@ namespace chessGUI {
     class MainMenu : public wxFrame {
     public:
         MainMenu();
-        MenuOption getOption() const;
+        [[nodiscard]] MenuOption getOption() const;
 
         void addToGameList(int i);
 
@@ -32,9 +33,11 @@ namespace chessGUI {
         constexpr static int s_defYPos = 10;
         std::array<wxButton, 4> buttons;
         wxListBox gameList;
+        std::mutex mtx;
         MenuOption currOption{0, 0};
 
         void OnButtonClicked(wxCommandEvent &ev);
+        void setOption(const MenuOption& option);
     };
 }
 

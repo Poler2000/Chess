@@ -68,9 +68,8 @@ namespace comm {
                 std::cout << "That's the end for today!\n";
                 break;
             }
+            std::cout << buff << '\n';
             std::string file(buff);
-            sleep(2);
-            std::flush(std::cout);
             std::ifstream is(file);
             cereal::JSONInputArchive archive(is);
 

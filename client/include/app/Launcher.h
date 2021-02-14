@@ -13,6 +13,8 @@ namespace comm {
 class Launcher : public wxApp {
 public:
     virtual bool OnInit();
+    virtual int OnRun();
+
     Launcher();
 
     void processMessage(const comm::Message &msg, const int clientFd);
@@ -24,6 +26,8 @@ private:
     std::unique_ptr<comm::Connector> m_connector;
 
     void requestNewGame();
+
+    void processOption();
 };
 
 #endif //CHESS_LAUNCHER_H

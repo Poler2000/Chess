@@ -9,7 +9,8 @@
 #include <thread>
 
 namespace comm {
-    Connector::Connector(unsigned int port) : m_port(port) {}
+    Connector::Connector(unsigned int port, Launcher* launcher)
+        : m_port(port), launcher(std::shared_ptr<Launcher>(launcher)) {}
 
     void Connector::connect() noexcept(false) {
         struct sockaddr_in serv_addr{};
@@ -31,26 +32,16 @@ namespace comm {
     void Connector::handleConnection() {
         std::cout << "waiting!";
         std::flush(std::cout);
-        sleep(3);
 
         while(true) {
             std::cout << "doing!";
             std::flush(std::cout);
-            sleep(3);
             char buff[256];
             if(read(m_sock, buff, 255) < 0) {
-                std::cout << "That's the end for today!\n";
-                std::cout << "doinqfefqeg!";
-                std::flush(std::cout);
-                sleep(1);
                 break;
             }
-            std::cout << "doingqrfe!";
-            std::flush(std::cout);
-            sleep(3);
             std::string file(buff);
-            sleep(2);
-            std::flush(std::cout);
+            std::cout << buff << '\n';
             std::ifstream is(file);
             cereal::JSONInputArchive archive(is);
 

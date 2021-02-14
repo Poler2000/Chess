@@ -2,6 +2,7 @@
 #define CHESS_MENUOPTION_H
 namespace chessGUI {
     struct MenuOption {
+
         int optionId;
         int itemId;
     };
