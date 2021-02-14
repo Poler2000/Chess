@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <cstring>
 #include "communication/Message.h"
+
 #include <fstream>
 #include <thread>
 
@@ -27,19 +28,21 @@ namespace comm {
         if (::connect(m_sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
             throw CommException("Couldn't establish connection");
         }
+
+        handler = std::thread(&Connector::handleConnection, this);
     }
 
     void Connector::handleConnection() {
-        std::cout << "waiting!";
-        std::flush(std::cout);
+        active = true;
 
-        while(true) {
-            std::cout << "doing!";
-            std::flush(std::cout);
+        while(active) {
             char buff[256];
+            std::cout << "Waiting for input!\n";
             if(read(m_sock, buff, 255) < 0) {
                 break;
             }
+            std::cout << "received input!\n";
+
             std::string file(buff);
             std::cout << buff << '\n';
             std::ifstream is(file);
@@ -49,7 +52,13 @@ namespace comm {
 
             archive(msg);
             std::cout << msg.getType() << '\n';
-            launcher->processMessage(msg, m_sock);
+
+            launcher->addMessageToQueue(msg);
+
+            if (msg.getType() == "ReconnectMsg") {
+                break;
+            }
+            //launcher->processMessage(msg, m_sock);
         }
         close(m_sock);
     }
@@ -62,5 +71,14 @@ namespace comm {
         ::send(m_sock, newMsg.c_str(), strlen(newMsg.c_str()), 0);
         cereal::JSONOutputArchive archive(os);
         archive(msg);
+    }
+
+    Connector::~Connector() {
+        stopListening();
+        handler.join();
+    }
+
+    void Connector::stopListening() {
+        active = false;
     }
 }

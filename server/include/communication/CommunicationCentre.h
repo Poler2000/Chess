@@ -1,11 +1,8 @@
 #ifndef CHESS_COMMUNICATIONCENTRE_H
 #define CHESS_COMMUNICATIONCENTRE_H
 
-#include "Message.h"
 #include "logic/GameManager.h"
-#include <netinet/in.h>
-#include <memory>
-#include <thread>
+#include "ServerConnector.h"
 
 namespace logic {
     class GameManager;
@@ -13,26 +10,14 @@ namespace logic {
 
 namespace comm {
 
-    class CommunicationCentre {
+    class CommunicationCentre : public ServerConnector {
     public:
-        CommunicationCentre();
-
         CommunicationCentre(logic::GameManager* const manager);
-
-        void init() noexcept(false);
-        void startListening(int maxClients) noexcept(false);
-        void stopListening();
-        void send(const comm::Message& msg, int clientFd);
     private:
-        struct sockaddr_in m_address;
-        const unsigned int m_port = 8080;
+        constexpr static unsigned int s_defPort = 8080;
         logic::GameManager* const manager;
-        int serverFd;
-        const int m_option = 1;
-        volatile bool active;
-        std::vector<std::thread> threads;
 
-        void handleConnection(int sockFd);
+        void handleConnection(int sockFd) override;
     };
 }
 

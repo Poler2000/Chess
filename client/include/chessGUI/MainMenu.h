@@ -24,13 +24,14 @@ namespace chessGUI {
         void fillGameList(const comm::Message &message);
 
     private:
-    wxDECLARE_EVENT_TABLE();
+        wxDECLARE_EVENT_TABLE();
         constexpr static std::string_view s_butTitles[] = {"Create Game", "Join Game", "Watch as spectator", "Load Replay"};
         constexpr static char s_defaultTitle[] = "Hello Chess!";
         constexpr static unsigned int s_defWidth = 960;
         constexpr static unsigned int s_defHeight = 720;
         constexpr static int s_defXPos = 10;
         constexpr static int s_defYPos = 10;
+
         std::array<wxButton, 4> buttons;
         wxListBox gameList;
         std::mutex mtx;

@@ -25,11 +25,7 @@ namespace chessGUI {
 
     MenuOption MainMenu::getOption() const {
 
-        while(currOption.optionId == 0) {
-            //std::cout << "w";
-            usleep(100);
-        }
-        std::cout << "\nHello\n";
+        while(currOption.optionId == 0) ;
         return currOption;
     }
 
@@ -38,9 +34,7 @@ namespace chessGUI {
     }
 
     void MainMenu::fillGameList(const comm::Message &message) {
-        std::cout << "erer\n";
         auto ids = message.getInts("id");
-        std::cout << "erer\n";
         std::for_each(ids.begin(), ids.end(), [&](int val){
             addToGameList(val);
         });
@@ -53,7 +47,6 @@ namespace chessGUI {
     void MainMenu::setOption(const MenuOption& option) {
         mtx.lock();
         currOption = option;
-        std::cout << "changed\n";
         mtx.unlock();
     }
 

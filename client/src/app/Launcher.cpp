@@ -19,42 +19,36 @@ bool Launcher::OnInit() {
     catch (comm::CommException& ex) {
         std::cout << ex.what();
     }
-    std::cout << "hey\n";
 
     comm::Message newMsg("RegisterMsg");
-
-    std::cout << "hey\n";
-
 
     m_mainMenu = new chessGUI::MainMenu();
     m_mainMenu->Show(true);
 
     m_connector->send(newMsg);
-    std::thread t(&comm::Connector::handleConnection, *m_connector);
-    t.detach();
-    std::cout << "hey\n";
+    //std::thread t(&comm::Connector::handleConnection, *m_connector);
+    //t.detach();
     //m_chessFrame = new chessGUI::ChessFrame();
    // m_chessFrame->Show();
 
     return wxAppConsoleBase::OnInit();
 }
 
-void Launcher::processMessage(const comm::Message& msg, const int clientFd) {
-    switch(hash(msg.getType().c_str())) {
+void Launcher::processMessage(const comm::Message& msg) {
+    switch (hash(msg.getType().c_str())) {
         case hash("GameListMsg"):
-            std::cout << "Ej\n";
-            if (m_mainMenu == nullptr) {
-                std::cout << "Null here";
-            }
-            else {
-                std::cout << "Not Null here";
+            if (m_mainMenu != nullptr) {
                 m_mainMenu->fillGameList(msg);
             }
-            requestNewGame();
             break;
         case hash("ReconnectMsg"):
             if (msg.hasField("port")) {
+                std::cout << "Port: " << msg.getInt("port") << '\n';
+                m_connector.reset();
+                std::cout << "Ello\n";
+
                 m_connector = std::make_unique<comm::Connector>(msg.getInt("port"), this);
+                std::cout << "Port: " << msg.getInt("port") << '\n';
             }
             break;
         case hash("GameStateMsg"):
@@ -70,7 +64,6 @@ void Launcher::processMessage(const comm::Message& msg, const int clientFd) {
 
 void Launcher::requestNewGame() {
     std::cout << "new game!\n";
-    sleep(2);
     comm::Message newMsg("CreateGameMsg");
     m_connector->send(newMsg);
 }
@@ -78,20 +71,33 @@ void Launcher::requestNewGame() {
 Launcher::Launcher() : m_connector(std::make_unique<comm::Connector>(s_defaultPort, this)) {}
 
 int Launcher::OnRun() {
-    std::cout << "On run\n";
-
+    std::thread q(&Launcher::monitorMessages, this);
     std::thread t(&Launcher::processOption, this);
-
+    std::cout << "I'm here\n";
     return wxAppBase::OnRun();
 }
 
 void  Launcher::processOption() {
     auto op = m_mainMenu->getOption();
-    std::cout << "Got option!\n";
-    std::cout << op.optionId << '\n';
+
     switch (op.optionId) {
         case chessGUI::MenuOptionValues::CREATE:
             requestNewGame();
             break;
+    }
+}
+
+void Launcher::addMessageToQueue(const comm::Message &msg) {
+    msgQueue.push(msg);
+}
+
+void Launcher::monitorMessages() {
+    while (true) {
+        if (!msgQueue.empty()) {
+            std::cout << "MESSAGE!\n";
+            processMessage(msgQueue.front());
+            msgQueue.pop();
+            std::cout << "MESSAGE END!\n";
+        }
     }
 }
