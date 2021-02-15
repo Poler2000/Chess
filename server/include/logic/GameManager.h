@@ -19,8 +19,9 @@ namespace logic {
         ~GameManager();
         void init();
         void run();
-        void processMessage(const std::string& msg, int clientFd);
         void processMessage(const comm::Message &msg, const int clientFd);
+        void addMessageToQueue(const comm::Message& msg, const int clientFd);
+        void monitorMessages();
     private:
         constexpr static uint32_t s_maxClients = 16;
         void createNewGame(const int clientFd);
@@ -30,6 +31,8 @@ namespace logic {
         std::mutex gmMutex;
         std::vector<Game> m_games;
         std::unique_ptr<comm::CommunicationCentre> m_communicationCentre;
+        std::queue<std::pair<comm::Message, const int>> m_msgQueue;
+
 
 
         void prepareAndSendListOfGames(const int fd);

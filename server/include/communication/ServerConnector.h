@@ -13,19 +13,22 @@ namespace comm {
     class ServerConnector {
     public:
         explicit ServerConnector(int port);
+        ServerConnector();
         virtual ~ServerConnector() = default;;
 
         void init() noexcept(false);
         void startListening(int maxClients) noexcept(false);
         void stopListening();
         void send(const comm::Message& msg, int clientFd);
+        void closeConnection(int clientFd);
+        int getPort() const;
     private:
         struct sockaddr_in m_address;
-        const unsigned int m_port;
+        unsigned int m_port;
         int serverFd;
         const int m_option = 1;
         std::atomic_bool active;
-        std::vector<std::thread> threads;
+        std::vector<std::pair<std::thread, int>> threads;
 
         virtual void handleConnection(int sockFd) = 0;
     };

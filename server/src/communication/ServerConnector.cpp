@@ -1,6 +1,7 @@
 #include <communication/Message.h>
 #include <fstream>
 #include "communication/ServerConnector.h"
+#include <unistd.h>
 
 namespace comm {
     void ServerConnector::init() noexcept(false) {
@@ -19,6 +20,10 @@ namespace comm {
         if (bind(serverFd, (struct sockaddr *)&m_address,
                  sizeof(m_address))<0) {
             throw CommException("Unable to bind socket to port");
+        }
+        if (m_port == 0) {
+            m_port = ntohs(m_address.sin_port);
+            std::cout << "changed to: " << m_port;
         }
     }
 
@@ -39,7 +44,7 @@ namespace comm {
             else {
                 std::cout << "connected\n";
             }
-            threads.emplace_back(std::thread(&ServerConnector::handleConnection, this, newSocket));
+            threads.emplace_back(std::make_pair(std::thread(&ServerConnector::handleConnection, this, newSocket), newSocket));
         }
     }
 
@@ -48,7 +53,7 @@ namespace comm {
     }
 
     void ServerConnector::send(const Message& msg, int clientFd) {
-        std::cout << msg.getType() << '\n';
+        std::cout << "Sending Msg: " << msg.getType() << '\n';
         std::string file = std::to_string(clientFd);
         std::string newMsg = "../../messages/" + file;
         std::ofstream os(newMsg);
@@ -59,4 +64,15 @@ namespace comm {
 
     ServerConnector::ServerConnector(int port)
         : active(false), m_port(port) {}
+
+    ServerConnector::ServerConnector()
+            : active(false), m_port(0) {}
+
+    int ServerConnector::getPort() const {
+        return m_port;
+    }
+
+    void ServerConnector::closeConnection(int clientFd) {
+        close(clientFd);
+    }
 }

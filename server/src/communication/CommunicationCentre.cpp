@@ -14,7 +14,6 @@ namespace comm {
             std::cout << "waiting!";
             char buff[256];
             if(read(sockFd, buff, 255) < 0) {
-                std::cout << "That's the end for today!\n";
                 break;
             }
             std::cout << buff << '\n';
@@ -25,9 +24,13 @@ namespace comm {
             comm::Message msg("");
 
             archive(msg);
-            std::cout << msg.getType() << '\n';
-            manager->processMessage(msg, sockFd);
+            std::cout << "Got msg: " << msg.getType() << '\n';
+            manager->addMessageToQueue(msg, sockFd);
+            if (msg.getType() == "CreateGameMsg") {
+                return;
+            }
         }
+        std::cout << "I'm being closed!";
         close(sockFd);
     }
 

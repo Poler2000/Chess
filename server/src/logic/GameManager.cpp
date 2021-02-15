@@ -2,7 +2,6 @@
 #include "communication/CommException.h"
 #include <iostream>
 #include <communication/Message.h>
-#include <fstream>
 #include <map>
 
 namespace logic {
@@ -23,20 +22,24 @@ namespace logic {
     void GameManager::init() {
         try {
             m_communicationCentre->init();
+            std::thread t(&GameManager::monitorMessages, this);
+            t.detach();
             m_communicationCentre->startListening(s_maxClients);
         }
         catch (comm::CommException& ex) {
             std::cout << ex.what() << '\n';
         }
+
     }
 
     void GameManager::createNewGame(const int clientFd) {
         gmMutex.lock();
         m_games.emplace_back(Game());
+        m_games.back().init();
         comm::Message msg("ReconnectMsg");
         msg.addField("port", m_games.back().getPort());
         m_communicationCentre->send(msg, clientFd);
-        m_games.back().init();
+        m_communicationCentre->closeConnection(clientFd);
         gmMutex.unlock();
     }
 
@@ -104,6 +107,20 @@ namespace logic {
             msg.addField("id", game.getId());
         });
         m_communicationCentre->send(msg, fd);
+    }
+
+    void GameManager::monitorMessages() {
+        while (true) {
+            if (!m_msgQueue.empty()) {
+                std::cout << "MessageToprocess: " << m_msgQueue.front().first.getType();
+                processMessage(m_msgQueue.front().first, m_msgQueue.front().second);
+                m_msgQueue.pop();
+            }
+        }
+    }
+
+    void GameManager::addMessageToQueue(const comm::Message &msg, const int clientFd) {
+        m_msgQueue.push(std::make_pair(msg, clientFd));
     }
 
 
