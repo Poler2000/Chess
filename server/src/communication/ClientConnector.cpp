@@ -4,7 +4,7 @@
 
 namespace comm {
     ClientConnector::ClientConnector(logic::Game *const game)
-        : ServerConnector(), game(game) {}
+        : ServerConnector(generateId() + 8080), game(game) {}
 
     void ClientConnector::handleConnection(int sockFd) {
         std::cout << "HANDLING\n";
@@ -25,6 +25,15 @@ namespace comm {
             game->addMessageToQueue(msg, sockFd);
         }
         close(sockFd);
+    }
+
+    uint32_t ClientConnector::generateId() {
+        static uint32_t counter = 1;
+        s_mtx.lock();
+        uint32_t result = counter;
+        counter++;
+        s_mtx.unlock();
+        return result;
     }
 }
 

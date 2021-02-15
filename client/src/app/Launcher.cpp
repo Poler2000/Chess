@@ -26,9 +26,7 @@ bool Launcher::OnInit() {
     m_mainMenu->Show(true);
 
     m_connector->send(newMsg);
-    //std::thread t(&comm::Connector::handleConnection, *m_connector);
-    //t.detach();
-    //m_chessFrame = new chessGUI::ChessFrame();
+    m_chessFrame = new chessGUI::ChessFrame();
    // m_chessFrame->Show();
 
     return wxAppConsoleBase::OnInit();
@@ -44,11 +42,20 @@ void Launcher::processMessage(const comm::Message& msg) {
         case hash("ReconnectMsg"):
             if (msg.hasField("port")) {
                 std::cout << "Port: " << msg.getInt("port") << '\n';
+
+                int port = msg.getInt("port");
+                sleep(1);
                 m_connector.reset();
+                m_connector = std::make_unique<comm::Connector>(port, this);
                 std::cout << "Ello\n";
 
-                m_connector = std::make_unique<comm::Connector>(msg.getInt("port"), this);
+                m_connector->connect();
                 std::cout << "Port: " << msg.getInt("port") << '\n';
+                std::cout << "Ello\n";
+                m_mainMenu->Disable();
+
+                m_chessFrame->Show();
+
             }
             break;
         case hash("GameStateMsg"):
@@ -87,7 +94,7 @@ void  Launcher::processOption() {
     }
 }
 
-void Launcher::addMessageToQueue(const comm::Message &msg) {
+void Launcher::addMessageToQueue(std::shared_ptr<comm::Message> msg) {
     msgQueue.push(msg);
 }
 
@@ -95,8 +102,12 @@ void Launcher::monitorMessages() {
     while (true) {
         if (!msgQueue.empty()) {
             std::cout << "MESSAGE!\n";
-            processMessage(msgQueue.front());
+            processMessage(*msgQueue.front());
+            std::cout << "MESSAGE END!\n";
+            std::cout << "MESSAGE END HERE!\n";
+            std::cout << "MESSAGE END HERE NOW!\n";
             msgQueue.pop();
+            std::cout << "MESSAGE END!\n";
             std::cout << "MESSAGE END!\n";
         }
     }

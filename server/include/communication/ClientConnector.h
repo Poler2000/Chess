@@ -3,6 +3,7 @@
 
 #include "logic/Game.h"
 #include "ServerConnector.h"
+#include <mutex>
 
 namespace logic {
     class Game;
@@ -17,6 +18,10 @@ namespace comm {
         logic::Game* const game;
 
         void handleConnection(int sockFd) override;
+
+        uint32_t generateId();
+
+        std::mutex s_mtx;
     };
 }
 

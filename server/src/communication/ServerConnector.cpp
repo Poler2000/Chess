@@ -35,6 +35,7 @@ namespace comm {
 
         int addrLen = sizeof(m_address);
         puts("Waiting for connections ...");
+        std::cout << m_port << '\n';
 
         while (active) {
             int newSocket;

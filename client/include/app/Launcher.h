@@ -6,6 +6,7 @@
 #include "communication/Connector.h"
 #include <memory>
 #include <queue>
+#include <memory>
 
 namespace comm {
     class Connector;
@@ -19,7 +20,9 @@ public:
     Launcher();
 
     void processMessage(const comm::Message &msg);
-    void addMessageToQueue(const comm::Message& msg);
+   // void addMessageToQueue(const comm::Message& msg);
+    void addMessageToQueue(std::shared_ptr<comm::Message> msg);
+
     void monitorMessages();
 
 private:
@@ -27,11 +30,12 @@ private:
     chessGUI::ChessFrame* m_chessFrame;
     chessGUI::MainMenu* m_mainMenu;
     std::unique_ptr<comm::Connector> m_connector;
-    std::queue<comm::Message> msgQueue;
+    std::queue<std::shared_ptr<comm::Message>> msgQueue;
 
     void requestNewGame();
 
     void processOption();
+
 };
 
 #endif //CHESS_LAUNCHER_H

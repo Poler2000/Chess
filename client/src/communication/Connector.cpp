@@ -24,10 +24,13 @@ namespace comm {
         if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
             throw CommException("Invalid address");
         }
+        std::cout << "QWERTY\n";
 
         if (::connect(m_sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+            perror("Connect");
             throw CommException("Couldn't establish connection");
         }
+        std::cout << "QWERTY\n";
 
         handler = std::thread(&Connector::handleConnection, this);
     }
@@ -44,7 +47,6 @@ namespace comm {
 
             std::cout << "received input!\n";
             std::cout << buff << '\n';
-            std::cout << (buff[0] == '\0') << '\n';
             std::flush(std::cout);
             usleep(100);
 
@@ -52,20 +54,19 @@ namespace comm {
             std::ifstream is(file);
             cereal::JSONInputArchive archive(is);
 
-            comm::Message msg("");
 
-            archive(msg);
-            std::cout << "Msg type: " << msg.getType() << '\n';
+            std::shared_ptr<comm::Message> msg = std::make_shared<comm::Message>("");
+
+            archive(*msg);
+            std::cout << "Msg type: " << msg->getType() << '\n';
 
             launcher->addMessageToQueue(msg);
 
-            if (msg.getType() == "ReconnectMsg") {
+            if (msg->getType() == "ReconnectMsg") {
                 std::cout << "Reconnect\n";
                 break;
             }
         }
-        std::cout << "CLOSED\n";
-        close(m_sock);
     }
 
     void Connector::send(const Message& msg) const noexcept(false) {
@@ -79,8 +80,10 @@ namespace comm {
     }
 
     Connector::~Connector() {
-        stopListening();
+        std::cout << "closing!\n";
+        close(m_sock);
         handler.join();
+        std::cout << "closing!\n";
     }
 
     void Connector::stopListening() {
