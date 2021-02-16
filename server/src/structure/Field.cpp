@@ -29,4 +29,8 @@ namespace structure {
         s_mtx.unlock();
         return result;
     }
+
+    int Field::getId() const {
+        return m_id;
+    }
 }

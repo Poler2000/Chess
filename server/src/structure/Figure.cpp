@@ -2,7 +2,7 @@
 
 namespace structure {
     structure::Figure::Figure(const unsigned int x, const unsigned int y, const uint16_t colour)
-            : m_x(x), m_y(y), m_colour(colour), m_id(generateId()) {}
+            : m_x(x), m_y(y), m_colourId(colour), m_id(generateId()) {}
 
     uint32_t Figure::generateId() {
         static uint32_t counter = 0;
@@ -31,11 +31,7 @@ namespace structure {
     }
 
     unsigned int Figure::getColour() const {
-        return m_colour;
-    }
-
-    std::shared_ptr<Movement> Figure::getPossibleMovement() const {
-        return m_movement;
+        return m_colourId;
     }
 }
 

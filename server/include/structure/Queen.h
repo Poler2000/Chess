@@ -16,6 +16,21 @@ namespace structure {
                     true
             });
         }
+
+        [[nodiscard]] std::vector<int> getPossibleMovements(std::vector<std::shared_ptr<structure::Field>> fields) const override {
+            std::vector<int> possibleFields;
+            auto matching = fields | std::views::filter([&](auto& f) {
+                return m_colourId == 1 ?
+                       f->getX() == getX() && f->getY() + 1 == getY() :
+                       f->getX() == getX() && f->getY() - 1 == getY();
+            });
+            std::for_each(matching.begin(), matching.end(), [&](auto& f){
+                if (f->isOccupiedBy() != m_colourId) {
+                    possibleFields.push_back(f->getId());
+                }
+            });
+            return possibleFields;
+        }
     };
 }
 

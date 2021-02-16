@@ -10,6 +10,8 @@ namespace structure {
     public:
         static std::vector<std::shared_ptr<Figure>> getRed();
         static std::vector<std::shared_ptr<Figure>> getBlue();
+        static uint16_t getRedId();
+        static uint16_t getBlueId();
     private:
         constexpr static uint16_t s_redId = 0;
         constexpr static uint16_t s_blueId = 7;

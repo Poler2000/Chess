@@ -12,6 +12,7 @@ namespace structure {
         int getY();
         uint16_t isOccupiedBy();
         void setOccupied(uint16_t empty);
+        int getId() const;
     private:
         const unsigned int m_xPos;
         const unsigned int m_yPos;
