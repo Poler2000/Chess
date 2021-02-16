@@ -1,10 +1,9 @@
 #ifndef CHESS_GAME_H
 #define CHESS_GAME_H
 
-#include <vector>
 #include "communication/Message.h"
 #include "communication/ClientConnector.h"
-#include <memory>
+#include "MoveValidator.h"
 #include <queue>
 
 namespace comm {
@@ -27,11 +26,13 @@ namespace logic {
         void processMessage(const comm::Message &msg, const int clientFd);
         void addMessageToQueue(const comm::Message& msg, const int clientFd);
         void monitorMessages();
+        void createFields();
     private:
         const uint32_t m_id;
         std::shared_ptr<comm::ClientConnector> m_connector;
         std::queue<std::pair<comm::Message, const int>> m_msgQueue;
-
+        std::vector<std::shared_ptr<structure::Field>> m_fields;
+        std::unique_ptr<MoveValidator> moveValidator;
     };
 }
 

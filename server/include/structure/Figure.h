@@ -19,7 +19,7 @@ namespace structure {
         [[nodiscard]] unsigned int getColour() const;
 
         void move(unsigned int x, unsigned int y);
-        std::shared_ptr<Movement> getPossibleMovement();
+        std::shared_ptr<Movement> getPossibleMovement() const;
     private:
         uint16_t m_x;
         uint16_t m_y;

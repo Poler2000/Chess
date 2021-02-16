@@ -34,7 +34,7 @@ namespace structure {
         return m_colour;
     }
 
-    std::shared_ptr<Movement> Figure::getPossibleMovement() {
+    std::shared_ptr<Movement> Figure::getPossibleMovement() const {
         return m_movement;
     }
 }

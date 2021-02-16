@@ -1,4 +1,6 @@
 #include <communication/Message.h>
+
+#include <memory>
 #include "../../include/logic/Game.h"
 
 namespace logic {
@@ -42,6 +44,8 @@ namespace logic {
 
     void Game::init() {
         m_connector = std::make_shared<comm::ClientConnector>(this);
+        createFields();
+        moveValidator = std::make_unique<MoveValidator>(m_fields);
         m_connector->init();
         std::thread t(&Game::monitorMessages, this);
         t.detach();
@@ -65,6 +69,14 @@ namespace logic {
 
     void Game::addMessageToQueue(const comm::Message &msg, const int clientFd) {
         m_msgQueue.push(std::make_pair(msg, clientFd));
+    }
+
+    void Game::createFields() {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                m_fields.emplace_back(std::make_shared<structure::Field>(x, y));
+            }
+        }
     }
 }
 
