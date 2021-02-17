@@ -13,7 +13,7 @@ namespace structure {
         static uint16_t getRedId();
         static uint16_t getBlueId();
     private:
-        constexpr static uint16_t s_redId = 0;
+        constexpr static uint16_t s_redId = 1;
         constexpr static uint16_t s_blueId = 7;
         static std::vector<std::shared_ptr<Figure>> constructPieces(uint16_t colour);
     };

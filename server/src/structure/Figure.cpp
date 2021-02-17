@@ -33,5 +33,9 @@ namespace structure {
     unsigned int Figure::getColour() const {
         return m_colourId;
     }
+
+    /*std::vector<std::shared_ptr<Field>> Figure::getNorth(auto f) const {
+        return std::vector<std::shared_ptr<Field>>();
+    }*/
 }
 

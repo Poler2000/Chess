@@ -18,11 +18,25 @@ namespace structure {
         [[nodiscard]] std::vector<int> getPossibleMovements(std::vector<std::shared_ptr<structure::Field>> fields) const override {
             std::vector<int> possibleFields;
             auto matching = fields | std::views::filter([&](auto& f) {
-                return abs(f->getX() - this->getX()) ==
-                       abs(f->getY() - this->getY());
+                return abs((int)f->getX() - (int)this->getX()) ==
+                       abs((int)f->getY() - (int)this->getY());
             });
-            std::for_each(matching.begin(), matching.end(), [&](auto& f) {
-                possibleFields.push_back(f->getId());
+
+            std::array<std::vector<std::shared_ptr<Field>>, 4> fieldsSorted;
+            fieldsSorted[0] = getNorthEast(matching);
+            fieldsSorted[1] = getNorthWest(matching);
+            fieldsSorted[2] = getSouthEast(matching);
+            fieldsSorted[3] = getSouthWest(matching);
+
+            std::for_each(fieldsSorted.begin(), fieldsSorted.end(), [&](auto vec){
+                for (auto& f : vec) {
+                    if (f->isOccupiedBy() != m_colourId) {
+                        possibleFields.push_back(f->getId());
+                    }
+                    if (f->isOccupiedBy() != 0) {
+                        break;
+                    }
+                }
             });
             return possibleFields;
         }

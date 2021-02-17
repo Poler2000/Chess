@@ -18,7 +18,7 @@ namespace structure {
         [[nodiscard]] std::vector<int> getPossibleMovements(std::vector<std::shared_ptr<structure::Field>> fields) const override {
             std::vector<int> possibleFields;
             auto matching = fields | std::views::filter([&](auto& f) {
-                return m_colourId == 0 ?
+                return m_colourId == PieceFactory::getRedId() ?
                 f->getX() == getX() && f->getY() + 1 == getY() :
                 f->getX() == getX() && f->getY() - 1 == getY();
             });

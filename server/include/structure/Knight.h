@@ -23,8 +23,10 @@ namespace structure {
                         (abs(f->getX() - this->getX()) == 1 &&
                          abs(f->getY() - this->getY()) == 2);
             });
-            std::for_each(matching.begin(), matching.end(), [&](auto& f){
-                possibleFields.push_back(f->getId());
+            std::for_each(matching.begin(), matching.end(), [&](auto& f) {
+                if (f->isOccupiedBy() != m_colourId) {
+                    possibleFields.push_back(f->getId());
+                }
             });
             return possibleFields;
         }
