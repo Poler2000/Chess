@@ -16,22 +16,41 @@ namespace logic {
         return m_id;
     }
 
-    int Game::getPort() {
+    int Game::getPort() const {
         return m_connector->getPort();
     }
 
-    bool Game::canAddClient() {
-        return false;
+    bool Game::canAddClient() const {
+        int counter = 0;
+        for (auto& p : m_players) {
+            if (++counter > 1) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void Game::processMessage(const comm::Message &msg, const int clientFd) {
         switch (hash(msg.getType().c_str())) {
             case hash("StartGameMsg"):
-                /* if(state != GameStates.ONE_PLAYER_READY) {
+                 if(gameState > GameStates::NO_PLAYERS) {
                      startGame();
-                 }*/
+                 }
                 break;
             case hash("PieceSelectedMsg"):
+                int pieceId = msg.getInt("id");
+                for (auto& p : m_players) {
+                    if (m_turnOfColour == p->getColour()) {
+                        auto possibilities = std::find_if(p->getFigures().begin(), p->getFigures().end(), [pieceId](auto& piece) {
+                            return piece->getId() == pieceId;
+                        })->get()->getPossibleMovements(m_fields);
+                        comm::Message newMsg("PossibleMovesMsg");
+                        std::for_each(possibilities.begin(), possibilities.end(), [&](int id){
+                            newMsg.addField(":")
+                        });
+                        break;
+                    }
+                }
                 break;
             case hash("MoveMsg"):
                 break;
@@ -43,9 +62,10 @@ namespace logic {
     }
 
     void Game::init() {
+        gameState = GameStates::NO_PLAYERS;
         m_connector = std::make_shared<comm::ClientConnector>(this);
         createFields();
-        moveValidator = std::make_unique<MoveValidator>(m_fields);
+        m_moveValidator = std::make_unique<MoveValidator>(m_fields);
         m_connector->init();
         std::thread t(&Game::monitorMessages, this);
         t.detach();
@@ -77,6 +97,30 @@ namespace logic {
                 m_fields.emplace_back(std::make_shared<structure::Field>(x, y));
             }
         }
+    }
+
+    void Game::runGame() {
+        while (gameState < GameStates::RUNNING) ;
+        while (gameState ==  GameStates::RUNNING) {
+            for (auto& p : m_players) {
+                if (m_turnOfColour == p->getColour()) {
+                    auto move = p->getMove();
+                    if (m_moveValidator->isValid(move)) {
+                        update(move);
+                    }
+                    break;
+                }
+            }
+            checkWinConditions();
+        }
+    }
+
+    void Game::checkWinConditions() {
+
+    }
+
+    void Game::startGame() {
+
     }
 }
 

@@ -2,8 +2,8 @@
 #define CHESS_FIGURE_H
 
 #include <cstdint>
-#include "Movement.h"
 #include "structure/Field.h"
+#include "chessPoint.h"
 #include <mutex>
 #include <memory>
 #include <vector>
@@ -14,7 +14,6 @@ namespace structure {
     class Figure {
     protected:
         Figure(unsigned int x, unsigned int y, uint16_t colour);
-        std::shared_ptr<Movement> m_movement;
         const uint16_t m_colourId;
 
         [[nodiscard]] std::vector<std::shared_ptr<Field>> getNorth(auto fields) const {
@@ -119,7 +118,7 @@ namespace structure {
         [[nodiscard]] unsigned int getY() const;
         [[nodiscard]] unsigned int getId() const;
         [[nodiscard]] unsigned int getColour() const;
-        [[nodiscard]] virtual std::vector<int> getPossibleMovements(std::vector<std::shared_ptr<Field>> fields) const = 0;
+        [[nodiscard]] virtual std::vector<chessPoint> getPossibleMovements(std::vector<std::shared_ptr<Field>> fields) const = 0;
 
         void move(unsigned int x, unsigned int y);
     private:

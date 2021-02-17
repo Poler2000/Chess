@@ -7,12 +7,12 @@
 namespace structure {
     class Field {
     public:
-        Field(const unsigned int x, const unsigned int y);
+        Field(unsigned int x, unsigned int y);
         int getX();
         int getY();
         uint16_t isOccupiedBy();
         void setOccupied(uint16_t empty);
-        int getId() const;
+        [[nodiscard]] int getId() const;
     private:
         const unsigned int m_xPos;
         const unsigned int m_yPos;

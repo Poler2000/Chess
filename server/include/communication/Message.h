@@ -1,6 +1,7 @@
 #ifndef CHESS_MESSAGE_H
 #define CHESS_MESSAGE_H
 
+#include "structure/chessPoint.h"
 #include <string>
 #include <vector>
 #include <variant>
@@ -12,9 +13,10 @@
 #include <cereal/types/string.hpp>
 
 namespace comm {
+
     struct Message {
         std::string type;
-        std::vector<std::pair<std::string, std::variant<std::string, int>>> content;
+        std::vector<std::pair<std::string, std::variant<std::string, int, structure::chessPoint>>> content;
 
         explicit Message(std::string type) : type(std::move(type)){}
 

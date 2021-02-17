@@ -6,11 +6,7 @@ TEST (FieldTest, occupiedTest) {
     structure::Field f{1,2};
     ASSERT_EQ (0,  f.isOccupiedBy());
     f.setOccupied(structure::PieceFactory::getRedId());
-    ASSERT_EQ (7, f.isOccupiedBy());
-    ASSERT_TRUE(true);
+    ASSERT_EQ (structure::PieceFactory::getRedId(), f.isOccupiedBy());
+    ASSERT_NE(structure::PieceFactory::getBlueId(), f.isOccupiedBy());
 }
 
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

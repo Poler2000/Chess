@@ -4,19 +4,10 @@
 namespace structure {
     class Bishop : public Figure {
     public:
-        Bishop(const unsigned int x, const unsigned int y, const int colour) : Figure(x, y, colour) {
-            m_movement = std::make_shared<Movement>(Movement{
-                    false,
-                    false,
-                    false,
-                    true,
-                    false,
-                    true
-            });
-        }
+        Bishop(const unsigned int x, const unsigned int y, const int colour) : Figure(x, y, colour) {}
 
-        [[nodiscard]] std::vector<int> getPossibleMovements(std::vector<std::shared_ptr<structure::Field>> fields) const override {
-            std::vector<int> possibleFields;
+        [[nodiscard]] std::vector<chessPoint> getPossibleMovements(std::vector<std::shared_ptr<structure::Field>> fields) const override {
+            std::vector<chessPoint> possibleFields;
             auto matching = fields | std::views::filter([&](auto& f) {
                 return abs((int)f->getX() - (int)this->getX()) ==
                        abs((int)f->getY() - (int)this->getY());
@@ -31,7 +22,7 @@ namespace structure {
             std::for_each(fieldsSorted.begin(), fieldsSorted.end(), [&](auto vec){
                 for (auto& f : vec) {
                     if (f->isOccupiedBy() != m_colourId) {
-                        possibleFields.push_back(f->getId());
+                        possibleFields.push_back(chessPoint{f->getX(), f->getY()});
                     }
                     if (f->isOccupiedBy() != 0) {
                         break;
