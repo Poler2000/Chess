@@ -34,6 +34,10 @@ namespace structure {
 
             return possibleFields;
         }
+
+        [[nodiscard]] std::string getType() const override {
+            return std::string("Rook");
+        }
     };
 }
 

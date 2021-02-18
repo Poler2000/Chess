@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "../../include/logic/Game.h"
+#include "structure/FigureData.h"
 
 namespace logic {
     constexpr uint64_t mix(char m, uint64_t s) {
@@ -38,21 +39,10 @@ namespace logic {
                  }
                 break;
             case hash("PieceSelectedMsg"):
-                /*int pieceId = msg.getInt("id");
-                for (auto& p : m_players) {
-                    if (m_turnOfColour == p->getColour()) {
-                        auto possibilities = std::find_if(p->getFigures().begin(), p->getFigures().end(), [pieceId](auto& piece) {
-                            return piece->getId() == pieceId;
-                        })->get()->getPossibleMovements(m_fields);
-                        comm::Message newMsg("PossibleMovesMsg");
-                        std::for_each(possibilities.begin(), possibilities.end(), [&](structure::chessPoint point){
-                            //newMsg.addField(":")
-                        });
-                        break;
-                    }
-                }*/
+                processFigureSelection(msg.getInt("id"), clientFd);
                 break;
             case hash("MoveMsg"):
+
                 break;
             default:
                 std::cout << "Incorrect message type\n";
@@ -103,13 +93,13 @@ namespace logic {
         while (gameState < GameStates::RUNNING) ;
         while (gameState ==  GameStates::RUNNING) {
             for (auto& p : m_players) {
-                /*if (m_turnOfColour == p->getColour()) {
+                if (m_turnOfColour == p->getColour()) {
                     auto move = p->getMove();
                     if (m_moveValidator->isValid(move)) {
                         update(move);
                     }
                     break;
-                }*/
+                }
             }
             checkWinConditions();
         }
@@ -120,6 +110,68 @@ namespace logic {
     }
 
     void Game::startGame() {
+        if (gameState == GameStates::ONE_PLAYER_READY) {
+            m_players.emplace_back(new ComputerPlayer());
+        }
+        else {
+
+        }
+        gameState = GameStates::RUNNING;
+        processGameState();
+    }
+
+    void Game::update(structure::Move move) {
+
+    }
+
+    void Game::processFigureSelection(const int pieceId, const int clientFd) {
+        for (auto& p : m_players) {
+            if (m_turnOfColour == p->getColour()) {
+                auto possibilities = std::find_if(p->getFigures().begin(), p->getFigures().end(), [pieceId](auto& piece) {
+                    return piece->getId() == pieceId;
+                })->get()->getPossibleMovements(m_fields);
+                comm::Message newMsg("PossibleMovesMsg");
+                std::for_each(possibilities.begin(), possibilities.end(), [&](structure::chessPoint point) {
+                    newMsg.addField("position", point);
+                });
+                m_connector->send(newMsg, clientFd);
+                break;
+            }
+        }
+    }
+
+    void Game::processGameState() {
+        comm::Message msg("GameStateMsg");
+        comm::Message msg2("GameStateMsg");
+
+        std::vector<std::shared_ptr<structure::Figure>> figures;
+        std::for_each(m_players.begin(), m_players.end(), [&](auto& p){
+            auto figs = p->getFigures();
+            figures.insert(figures.end(), figs.begin(), figs.end());
+        });
+
+        msg.addField("gameId", m_id);
+        msg2.addField("gameId", m_id);
+        msg.addField("players", m_players.size());
+        msg2.addField("players", m_players.size());
+        msg.addField("gameState", (int)gameState);
+        msg2.addField("gameState", (int)gameState);
+
+        std::for_each(figures.begin(), figures.end(), [&](auto& f) {
+            msg.template addField("figure", structure::FigureData(f));
+            msg2.template addField("figure", structure::FigureData(f));
+        });
+        msg.addField("yourTurn", 0);
+        msg2.addField("yourTurn", 1);
+
+        std::for_each(m_players.begin(), m_players.end(), [&](auto& p) {
+            if (m_turnOfColour == p->getColour()) {
+                m_connector->send(msg2, );
+            }
+            else {
+                m_connector->send(msg, )
+            }
+        })
 
     }
 }

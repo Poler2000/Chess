@@ -5,6 +5,11 @@ namespace structure {
     struct chessPoint {
         int x;
         int y;
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(x, y);
+        }
     };
 }
 

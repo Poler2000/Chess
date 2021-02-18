@@ -3,6 +3,8 @@
 
 #include "communication/Message.h"
 #include "communication/ClientConnector.h"
+#include "HumanPlayer.h"
+#include "ComputerPlayer.h"
 #include "AbstractPlayer.h"
 #include "MoveValidator.h"
 #include <queue>
@@ -53,6 +55,12 @@ namespace logic {
         void checkWinConditions();
 
         void startGame();
+
+        void update(structure::Move move);
+
+        void processFigureSelection(const int pieceId, const int clientFd);
+
+        void processGameState();
     };
 }
 

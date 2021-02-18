@@ -2,6 +2,7 @@
 #define CHESS_MESSAGE_H
 
 #include "structure/chessPoint.h"
+#include "structure/FigureData.h"
 #include <string>
 #include <vector>
 #include <variant>
@@ -16,7 +17,7 @@ namespace comm {
 
     struct Message {
         std::string type;
-        std::vector<std::pair<std::string, std::variant<std::string, int/*, structure::chessPoint*/>>> content;
+        std::vector<std::pair<std::string, std::variant<std::string, int, structure::chessPoint, structure::FigureData>>> content;
 
         explicit Message(std::string type) : type(std::move(type)){}
 

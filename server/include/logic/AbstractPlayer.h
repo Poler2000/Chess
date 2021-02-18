@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "structure/Figure.h"
+#include "structure/Move.h"
 
 namespace logic {
     class AbstractPlayer {
@@ -11,6 +12,7 @@ namespace logic {
         bool isPlaying() const;
         std::vector<std::shared_ptr<structure::Figure>> getFigures() const;
         uint16_t getColour() const;
+        structure::Move getMove() const;
     protected:
         std::vector<std::shared_ptr<structure::Figure>> m_figureSet;
         uint16_t m_colourId;
