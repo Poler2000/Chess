@@ -4,12 +4,14 @@
 #include <string>
 #include <memory>
 #include "Figure.h"
+#include <cereal/types/string.hpp>
 
 namespace structure {
     struct FigureData {
         FigureData(std::shared_ptr<Figure> figure)
             : id(figure->getId()), colourId(figure->getColour()), pieceType(figure->getType()),
             x(figure->getX()), y(figure->getY()) {}
+        FigureData();
 
         unsigned int id;
         unsigned int colourId;

@@ -61,6 +61,10 @@ namespace logic {
         void processFigureSelection(const int pieceId, const int clientFd);
 
         void processGameState();
+
+        void handleRegister(const std::string &role, const int fd);
+
+        std::vector<std::shared_ptr<structure::Figure>> getAllFigures();
     };
 }
 

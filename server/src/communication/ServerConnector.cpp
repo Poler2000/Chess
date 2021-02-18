@@ -54,6 +54,9 @@ namespace comm {
     }
 
     void ServerConnector::send(const Message& msg, int clientFd) {
+        if (clientFd == 0) {
+            return;
+        }
         std::cout << "Sending Msg: " << msg.getType() << '\n';
         std::string file = std::to_string(clientFd);
         std::string newMsg = "../../messages/" + file;

@@ -23,7 +23,7 @@ namespace comm {
 
         template<class T>
         void addField(std::string label, T arg) {
-                    content.template emplace_back(std::make_pair(std::move(label), arg));
+            content.template emplace_back(std::make_pair(std::move(label), arg));
         }
 
         template <class Archive>

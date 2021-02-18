@@ -24,8 +24,10 @@ namespace logic {
     bool Game::canAddClient() const {
         int counter = 0;
         for (auto& p : m_players) {
-            if (++counter > 1) {
-                return false;
+            if (p->isPlaying()) {
+                if (++counter > 1) {
+                    return false;
+                }
             }
         }
         return true;
@@ -33,6 +35,9 @@ namespace logic {
 
     void Game::processMessage(const comm::Message &msg, const int clientFd) {
         switch (hash(msg.getType().c_str())) {
+            case hash("RegisterMsg"):
+                handleRegister(msg.getString("role"), clientFd);
+                break;
             case hash("StartGameMsg"):
                  if(gameState > GameStates::NO_PLAYERS) {
                      startGame();
@@ -121,7 +126,21 @@ namespace logic {
     }
 
     void Game::update(structure::Move move) {
+        auto figures = getAllFigures();
+        auto figToMove = std::find_if(figures.begin(), figures.end(), [&](auto& f){
+            return move.pieceId == f->getId();
+        });
 
+        std::find_if(m_fields.begin(), m_fields.end(), [&](auto& f){
+            return figToMove->get()->getX() == f->getX() &&
+                    figToMove->get()->getX() == f->getY();
+        })->get()->setOccupied(figToMove->get()->getColour());
+
+        std::find_if(m_fields.begin(), m_fields.end(), [&](auto& f){
+            return move.destX == f->getX() &&
+                    move.destY == f->getY();
+        })->get()->setOccupied(figToMove->get()->getColour());
+        figToMove->get()->move(move.destX, move.destY);
     }
 
     void Game::processFigureSelection(const int pieceId, const int clientFd) {
@@ -150,10 +169,10 @@ namespace logic {
             figures.insert(figures.end(), figs.begin(), figs.end());
         });
 
-        msg.addField("gameId", m_id);
-        msg2.addField("gameId", m_id);
-        msg.addField("players", m_players.size());
-        msg2.addField("players", m_players.size());
+        msg.addField("gameId", (int)m_id);
+        msg2.addField("gameId", (int)m_id);
+        msg.addField("players", (int)m_players.size());
+        msg2.addField("players", (int)m_players.size());
         msg.addField("gameState", (int)gameState);
         msg2.addField("gameState", (int)gameState);
 
@@ -166,13 +185,35 @@ namespace logic {
 
         std::for_each(m_players.begin(), m_players.end(), [&](auto& p) {
             if (m_turnOfColour == p->getColour()) {
-                m_connector->send(msg2, );
+                m_connector->send(msg2, p->getFd());
             }
             else {
-                m_connector->send(msg, )
+                m_connector->send(msg, p->getFd());
             }
-        })
-
+        });
     }
+
+    void Game::handleRegister(const std::string& role, const int fd) {
+        static bool isThereFirst = false;
+        if (role == "player") {
+            m_players.emplace_back(new HumanPlayer(false, fd, isThereFirst ?
+                structure::PieceFactory::getRedId() : structure::PieceFactory::getBlueId()));
+            isThereFirst = true;
+        }
+        else if (role == "spectator") {
+            m_players.emplace_back(new HumanPlayer(false, fd, 0));
+        }
+    }
+
+    std::vector<std::shared_ptr<structure::Figure>> Game::getAllFigures() {
+        std::vector<std::shared_ptr<structure::Figure>> figures;
+        std::for_each(m_players.begin(), m_players.end(), [&](auto& p){
+            auto figs = p->getFigures();
+            figures.insert(figures.end(), figs.begin(), figs.end());
+        });
+        return figures;
+    }
+
+
 }
 
