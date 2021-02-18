@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 #include "structure/Field.h"
 #include "structure/PieceFactory.h"
 

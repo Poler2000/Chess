@@ -16,7 +16,7 @@ namespace comm {
 
     struct Message {
         std::string type;
-        std::vector<std::pair<std::string, std::variant<std::string, int, structure::chessPoint>>> content;
+        std::vector<std::pair<std::string, std::variant<std::string, int/*, structure::chessPoint*/>>> content;
 
         explicit Message(std::string type) : type(std::move(type)){}
 

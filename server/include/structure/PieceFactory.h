@@ -6,6 +6,8 @@
 #include "Figure.h"
 
 namespace structure {
+    class Figure;
+
     class PieceFactory {
     public:
         static std::vector<std::shared_ptr<Figure>> getRed();

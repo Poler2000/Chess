@@ -4,6 +4,7 @@
 #include <cstdint>
 #include "structure/Field.h"
 #include "chessPoint.h"
+#include "PieceFactory.h"
 #include <mutex>
 #include <memory>
 #include <vector>

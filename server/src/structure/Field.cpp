@@ -3,7 +3,7 @@
 namespace structure {
 
     Field::Field(const unsigned int x, const unsigned int y)
-        : m_xPos(x), m_yPos(y), m_id(generateId()) {}
+        : m_xPos(x), m_yPos(y), m_id(generateId()), m_occupied(0) {}
 
     int Field::getX() {
         return m_xPos;

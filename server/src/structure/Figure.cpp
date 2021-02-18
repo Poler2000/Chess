@@ -14,8 +14,12 @@ namespace structure {
     }
 
     void Figure::move(unsigned int x, unsigned int y) {
-        m_x = x;
-        m_y = y;
+        if (x < 8) {
+            m_x = x;
+        }
+        if (y < 8) {
+            m_y = y;
+        }
     }
 
     unsigned int Figure::getX() const {
@@ -33,9 +37,5 @@ namespace structure {
     unsigned int Figure::getColour() const {
         return m_colourId;
     }
-
-    /*std::vector<std::shared_ptr<Field>> Figure::getNorth(auto f) const {
-        return std::vector<std::shared_ptr<Field>>();
-    }*/
 }
 

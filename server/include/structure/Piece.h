@@ -1,6 +1,8 @@
 #ifndef CHESS_PIECE_H
 #define CHESS_PIECE_H
 
+#include <iostream>
+
 namespace structure {
     class Piece: public Figure {
     public:
@@ -10,11 +12,15 @@ namespace structure {
             std::vector<chessPoint> possibleFields;
             auto matching = fields | std::views::filter([&](auto& f) {
                 return m_colourId == PieceFactory::getRedId() ?
-                f->getX() == getX() && f->getY() + 1 == getY() :
-                f->getX() == getX() && f->getY() - 1 == getY();
+                       ((f->getX() == getX()) || (abs(f->getX() - (int)getX()) < 2 &&
+                       f->isOccupiedBy() == PieceFactory::getBlueId())) && f->getY() + 1 == getY() :
+                       ((f->getX() == getX()) || (abs(f->getX() - (int)getX()) < 2 &&
+                       f->isOccupiedBy() == PieceFactory::getRedId())) && f->getY() - 1 == getY();
             });
             std::for_each(matching.begin(), matching.end(), [&](auto& f){
-                possibleFields.push_back(chessPoint{f->getX(), f->getY()});
+                if (f->isOccupiedBy() != m_colourId) {
+                    possibleFields.push_back(chessPoint{f->getX(), f->getY()});
+                }
             });
             return possibleFields;
         }

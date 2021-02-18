@@ -38,19 +38,19 @@ namespace logic {
                  }
                 break;
             case hash("PieceSelectedMsg"):
-                int pieceId = msg.getInt("id");
+                /*int pieceId = msg.getInt("id");
                 for (auto& p : m_players) {
                     if (m_turnOfColour == p->getColour()) {
                         auto possibilities = std::find_if(p->getFigures().begin(), p->getFigures().end(), [pieceId](auto& piece) {
                             return piece->getId() == pieceId;
                         })->get()->getPossibleMovements(m_fields);
                         comm::Message newMsg("PossibleMovesMsg");
-                        std::for_each(possibilities.begin(), possibilities.end(), [&](int id){
-                            newMsg.addField(":")
+                        std::for_each(possibilities.begin(), possibilities.end(), [&](structure::chessPoint point){
+                            //newMsg.addField(":")
                         });
                         break;
                     }
-                }
+                }*/
                 break;
             case hash("MoveMsg"):
                 break;
@@ -103,13 +103,13 @@ namespace logic {
         while (gameState < GameStates::RUNNING) ;
         while (gameState ==  GameStates::RUNNING) {
             for (auto& p : m_players) {
-                if (m_turnOfColour == p->getColour()) {
+                /*if (m_turnOfColour == p->getColour()) {
                     auto move = p->getMove();
                     if (m_moveValidator->isValid(move)) {
                         update(move);
                     }
                     break;
-                }
+                }*/
             }
             checkWinConditions();
         }
