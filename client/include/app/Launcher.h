@@ -36,6 +36,7 @@ private:
 
     void processOption();
 
+    std::basic_string<char> m_role;
 };
 
 #endif //CHESS_LAUNCHER_H

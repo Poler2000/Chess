@@ -9,10 +9,10 @@
 namespace logic {
     class AbstractPlayer {
     public:
-        bool isPlaying() const;
-        std::vector<std::shared_ptr<structure::Figure>> getFigures() const;
-        uint16_t getColour() const;
-        structure::Move getMove() const;
+        [[nodiscard]] bool isPlaying() const;
+        [[nodiscard]] std::vector<std::shared_ptr<structure::Figure>> getFigures() const;
+        [[nodiscard]] uint16_t getColour() const;
+        [[nodiscard]] structure::Move getMove() const;
         int getFd() const;
     protected:
         std::vector<std::shared_ptr<structure::Figure>> m_figureSet;

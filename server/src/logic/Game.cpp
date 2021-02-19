@@ -213,7 +213,5 @@ namespace logic {
         });
         return figures;
     }
-
-
 }
 

@@ -27,7 +27,6 @@ bool Launcher::OnInit() {
 
     m_connector->send(newMsg);
     m_chessFrame = new chessGUI::ChessFrame();
-   // m_chessFrame->Show();
 
     return wxAppConsoleBase::OnInit();
 }
@@ -50,6 +49,9 @@ void Launcher::processMessage(const comm::Message& msg) {
                 std::cout << "Ello\n";
 
                 m_connector->connect();
+                comm::Message newMsg("RegisterMsg");
+                newMsg.addField("role", m_role);
+                m_connector->send(newMsg);
                 std::cout << "Port: " << msg.getInt("port") << '\n';
                 std::cout << "Ello\n";
                 m_mainMenu->Disable();
@@ -89,6 +91,7 @@ void  Launcher::processOption() {
 
     switch (op.optionId) {
         case chessGUI::MenuOptionValues::CREATE:
+            m_role = std::string("player");
             requestNewGame();
             break;
     }
@@ -104,11 +107,8 @@ void Launcher::monitorMessages() {
             std::cout << "MESSAGE!\n";
             processMessage(*msgQueue.front());
             std::cout << "MESSAGE END!\n";
-            std::cout << "MESSAGE END HERE!\n";
-            std::cout << "MESSAGE END HERE NOW!\n";
             msgQueue.pop();
-            std::cout << "MESSAGE END!\n";
-            std::cout << "MESSAGE END!\n";
+            std::cout << "MESSAGE POP!\n";
         }
     }
 }

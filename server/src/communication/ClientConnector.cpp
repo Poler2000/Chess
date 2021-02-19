@@ -14,6 +14,10 @@ namespace comm {
             if(read(sockFd, buff, 255) < 0) {
                 break;
             }
+            if (buff[0] == '\0') {
+                std::cout << "NO MSG!\n";
+                continue;
+            }
             std::cout << buff << '\n';
             std::string file(buff);
             std::ifstream is(file);

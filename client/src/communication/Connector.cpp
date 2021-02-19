@@ -70,7 +70,7 @@ namespace comm {
     }
 
     void Connector::send(const Message& msg) const noexcept(false) {
-        std::cout << msg.getType() << '\n';
+        std::cout << "I'm sending " << msg.getType() << '\n';
         std::string file = std::to_string(m_sock);
         std::string newMsg = "../../messages/" + file;
         std::ofstream os(newMsg);

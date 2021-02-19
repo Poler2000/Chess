@@ -13,4 +13,12 @@ namespace logic {
     uint16_t AbstractPlayer::getColour() const {
         return 0;
     }
+
+    structure::Move AbstractPlayer::getMove() const {
+        return structure::Move();
+    }
+
+    int AbstractPlayer::getFd() const {
+        return 0;
+    }
 }

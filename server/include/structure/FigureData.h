@@ -11,7 +11,7 @@ namespace structure {
         FigureData(std::shared_ptr<Figure> figure)
             : id(figure->getId()), colourId(figure->getColour()), pieceType(figure->getType()),
             x(figure->getX()), y(figure->getY()) {}
-        FigureData();
+        FigureData() {}
 
         unsigned int id;
         unsigned int colourId;
