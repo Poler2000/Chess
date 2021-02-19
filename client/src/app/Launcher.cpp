@@ -56,7 +56,15 @@ void Launcher::processMessage(const comm::Message& msg) {
                 std::cout << "Ello\n";
                 m_mainMenu->Disable();
 
+                std::cout << "Showing\n";
+
                 m_chessFrame->Show();
+
+                std::cout << "Shown\n";
+
+                // TODO refactor
+                comm::Message startGameMsg("StartGameMsg");
+                m_connector->send(startGameMsg);
 
             }
             break;

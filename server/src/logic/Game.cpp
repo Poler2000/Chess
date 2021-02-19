@@ -39,8 +39,9 @@ namespace logic {
                 handleRegister(msg.getString("role"), clientFd);
                 break;
             case hash("StartGameMsg"):
-                 if(gameState > GameStates::NO_PLAYERS) {
-                     startGame();
+                if (gameState > GameStates::NO_PLAYERS) {
+                    std::cout << "ELLLLO !\n";
+                    startGame();
                  }
                 break;
             case hash("PieceSelectedMsg"):
@@ -121,6 +122,7 @@ namespace logic {
         else {
 
         }
+        std::cout << "starting game!\n";
         gameState = GameStates::RUNNING;
         processGameState();
     }
@@ -182,9 +184,11 @@ namespace logic {
         });
         msg.addField("yourTurn", 0);
         msg2.addField("yourTurn", 1);
+        std::cout << "prepared game report!\n";
 
         std::for_each(m_players.begin(), m_players.end(), [&](auto& p) {
             if (m_turnOfColour == p->getColour()) {
+                std::cout << "sending game report!\n";
                 m_connector->send(msg2, p->getFd());
             }
             else {
@@ -196,8 +200,15 @@ namespace logic {
     void Game::handleRegister(const std::string& role, const int fd) {
         static bool isThereFirst = false;
         if (role == "player") {
+            std::cout << "new player!\n";
             m_players.emplace_back(new HumanPlayer(false, fd, isThereFirst ?
                 structure::PieceFactory::getRedId() : structure::PieceFactory::getBlueId()));
+            if (isThereFirst) {
+                gameState = GameStates::TWO_PLAYERS_READY;
+            }
+            else {
+                gameState = GameStates::ONE_PLAYER_READY;
+            }
             isThereFirst = true;
         }
         else if (role == "spectator") {

@@ -16,6 +16,8 @@ namespace chessGUI {
     private:
         wxBitmap m_image;
     DECLARE_EVENT_TABLE()
+
+        double m_scale;
     };
 }
 

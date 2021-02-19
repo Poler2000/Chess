@@ -13,6 +13,8 @@ namespace chessGUI {
     class ChessFrame : public wxFrame {
     public:
         ChessFrame();
+        void resetFigures();
+        void placeFigure(const std::string& type, int colourId, int x, int y);
     private:
         wxDECLARE_EVENT_TABLE();
         constexpr static char s_defaultTitle[] = "Hello Chess!";
