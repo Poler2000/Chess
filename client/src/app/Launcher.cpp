@@ -81,6 +81,7 @@ void Launcher::processMessage(const comm::Message& msg) {
             }
             break;
         case hash("PossibleMovesMsg"):
+            handlePositions(msg);
             break;
         default:
             std::cout << "Incorrect message type\n";
@@ -135,4 +136,11 @@ void Launcher::processFigureSelection(const int id) {
     comm::Message msg("PieceSelectedMsg");
     msg.addField("id", id);
     m_connector->send(msg);
+}
+
+void Launcher::handlePositions(const comm::Message &msg) {
+    auto positions = msg.getPositions();
+    for (auto& p : positions) {
+        m_chessFrame->enableMoveTo(p.x, p.y);
+    }
 }

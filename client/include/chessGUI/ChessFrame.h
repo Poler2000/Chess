@@ -21,6 +21,9 @@ namespace chessGUI {
         void resetFigures();
         void placeFigure(int id, const std::string& type, int colourId, int x, int y);
         void onFigureClicked(wxMouseEvent& ev);
+
+        void enableMoveTo(int x, int y);
+
     private:
     wxDECLARE_EVENT_TABLE();
         constexpr static char s_defaultTitle[] = "Hello Chess!";

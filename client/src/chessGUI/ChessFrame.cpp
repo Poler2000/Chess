@@ -47,5 +47,9 @@ namespace chessGUI {
         launcher->processFigureSelection(fields[ev.GetId() - 10001].getFigureId());
     }
 
+    void ChessFrame::enableMoveTo(const int x, const int y) {
+        fields[8 * y + x].SetBackgroundColour(*wxBLUE);
+    }
+
 }
 

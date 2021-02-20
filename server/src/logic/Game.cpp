@@ -151,11 +151,21 @@ namespace logic {
     }
 
     void Game::processFigureSelection(const int pieceId, const int clientFd) {
+        std::cout << "Hello begins\n";
         for (auto& p : m_players) {
+            auto figures = p->getFigures();
             if (m_turnOfColour == p->getColour()) {
-                auto possibilities = std::find_if(p->getFigures().begin(), p->getFigures().end(), [pieceId](auto& piece) {
+                auto it = std::find_if(figures.begin(), figures.end(), [pieceId](auto& piece) {
+                    std::cout << "Hello searching\n";
                     return piece->getId() == pieceId;
-                })->get()->getPossibleMovements(m_fields);
+                });
+                if (it >= figures.end()) {
+                    std::cout << "Hello stops\n";
+                    continue;
+                }
+                auto possibilities = it->get()->getPossibleMovements(m_fields);
+                std::cout << "Hello continues\n";
+
                 comm::Message newMsg("PossibleMovesMsg");
                 std::for_each(possibilities.begin(), possibilities.end(), [&](structure::chessPoint point) {
                     newMsg.addField("position", point);
@@ -182,7 +192,7 @@ namespace logic {
         msg2.addField("players", (int)m_players.size());
         msg.addField("gameState", (int)gameState);
         msg2.addField("gameState", (int)gameState);
-        std::cout << figures.size() << '\n';
+
         std::for_each(figures.begin(), figures.end(), [&](auto& f) {
             msg.template addField("figure", structure::FigureData(f));
             msg2.template addField("figure", structure::FigureData(f));
@@ -206,7 +216,7 @@ namespace logic {
         static bool isThereFirst = false;
         if (role == "player") {
             std::cout << "new player!\n";
-            m_players.emplace_back(new HumanPlayer(false, fd, isThereFirst ?
+            m_players.emplace_back(new HumanPlayer(true, fd, isThereFirst ?
                 structure::PieceFactory::getRedId() : structure::PieceFactory::getBlueId()));
             if (isThereFirst) {
                 gameState = GameStates::TWO_PLAYERS_READY;

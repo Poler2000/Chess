@@ -40,6 +40,8 @@ private:
     void processOption();
 
     std::basic_string<char> m_role;
+
+    void handlePositions(const comm::Message &msg);
 };
 
 #endif //CHESS_LAUNCHER_H

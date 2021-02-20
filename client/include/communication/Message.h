@@ -17,7 +17,7 @@ namespace comm {
 
     struct Message {
         std::string type;
-        std::vector<std::pair<std::string, std::variant<std::string, int, structure::chessPoint, structure::FigureData>>> content;
+        std::vector<std::pair<std::string, std::variant<std::string, int, structure::ChessPoint, structure::FigureData>>> content;
 
         explicit Message(std::string type) : type(std::move(type)){}
 
@@ -107,6 +107,22 @@ namespace comm {
                 if (it->first == "figure") {
                     try {
                         result.emplace_back(std::get<structure::FigureData>(it->second));
+                    }
+                    catch(std::bad_variant_access& ex) {
+                        throw ex;
+                    }
+                }
+            }
+            return result;
+        }
+
+        [[nodiscard]] std::vector<structure::ChessPoint> getPositions() const noexcept(false) {
+            std::vector<structure::ChessPoint> result;
+            for(auto it = content.begin(); it != content.end(); it++) {
+                std::cout << it->first << "\n";
+                if (it->first == "position") {
+                    try {
+                        result.emplace_back(std::get<structure::ChessPoint>(it->second));
                     }
                     catch(std::bad_variant_access& ex) {
                         throw ex;

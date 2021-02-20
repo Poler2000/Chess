@@ -40,10 +40,14 @@ namespace comm {
 
         while(active) {
             char buff[256];
-            std::cout << "Waiting for input!\n";
-            if(read(m_sock, buff, 255) < 0) {
+            bzero(buff, 256);
+            if (read(m_sock, buff, 255) < 0) {
                 break;
             }
+            else if (buff[0] == '\0') {
+                continue;
+            }
+
 
             std::cout << "received input!\n";
             std::cout << buff << '\n';
