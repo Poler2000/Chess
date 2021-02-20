@@ -15,8 +15,9 @@ namespace chessGUI {
         ChessFrame();
         void resetFigures();
         void placeFigure(int id, const std::string& type, int colourId, int x, int y);
+        void onFigureClicked(wxMouseEvent& ev);
     private:
-        wxDECLARE_EVENT_TABLE();
+    wxDECLARE_EVENT_TABLE();
         constexpr static char s_defaultTitle[] = "Hello Chess!";
         constexpr static unsigned int s_defWidth = 960;
         constexpr static unsigned int s_defHeight = 720;
@@ -24,6 +25,7 @@ namespace chessGUI {
         constexpr static int s_defYPos = 10;
         constexpr static uint16_t s_redId = 1;
         constexpr static uint16_t s_blueId = 7;
+
         std::array<ChessField, 64> fields;
     };
 }

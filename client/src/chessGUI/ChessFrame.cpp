@@ -13,7 +13,6 @@ namespace chessGUI {
         std::for_each(fields.begin(), fields.end(), [&, i = 0, p = 0](auto& field) mutable {
             field.Create(this, 10000 + ++i);
             field.SetBackgroundColour((i % 2 == p) ? *wxBLACK : *wxWHITE);
-           // field.setImage(wxT("../resources/BlueQueen.png"), wxBITMAP_TYPE_PNG);
             p = (i % 8 == 0) ? -p + 1 : p;
             sizer->Add(&field, 1, wxEXPAND);
         });
@@ -33,6 +32,13 @@ namespace chessGUI {
         std::string colour = colourId == s_blueId ? "Blue" : "Red";
         std::string path = std::string("../resources/") + colour + type + std::string(".png");
         fields[8 * y + x].setImage(path, wxBITMAP_TYPE_PNG);
+        fields[8 * y + x].Connect(fields[8 * y + x].GetId(), wxEVT_LEFT_DOWN, wxMouseEventHandler(ChessFrame::onFigureClicked), NULL, this );
+        //fields[8 * y + x].Bind(wxEVT_COMMAND_LEFT_CLICK, &ChessFrame::onFigureClicked,this);
+    }
+
+    void ChessFrame::onFigureClicked(wxMouseEvent& ev) {
+        std::cout << "Clicked!\n";
+        fields[ev.GetId() - 10001].SetOwnBackgroundColour(*wxGREEN);
     }
 
 }
