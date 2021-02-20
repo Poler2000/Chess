@@ -14,11 +14,16 @@ namespace chessGUI {
         void render(wxDC& dc);
         void setImage(wxString file, wxBitmapType format);
         void resetImage();
+
+        void setFigureId(const int id);
+        int getFigureId() const;
+
     private:
         wxBitmap m_image;
     DECLARE_EVENT_TABLE()
 
         double m_scale;
+        int m_figureId;
     };
 }
 

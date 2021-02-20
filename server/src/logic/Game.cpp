@@ -54,7 +54,6 @@ namespace logic {
                 std::cout << "Incorrect message type\n";
                 break;
         }
-        std::cout << "Received\n";
     }
 
     void Game::init() {
@@ -127,6 +126,7 @@ namespace logic {
                 p->setFigures(structure::PieceFactory::getRed());
             }
         });
+        m_turnOfColour = structure::PieceFactory::getBlueId();
         std::cout << "starting game!\n";
         gameState = GameStates::RUNNING;
         processGameState();

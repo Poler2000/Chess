@@ -3,16 +3,21 @@
 
 #include <wx/wxprec.h>
 #include <string>
+#include <memory>
 #include <array>
 #include "ChessField.h"
+#include "app/Launcher.h"
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
 
+class Launcher;
+
 namespace chessGUI {
+
     class ChessFrame : public wxFrame {
     public:
-        ChessFrame();
+        ChessFrame(std::shared_ptr<Launcher>);
         void resetFigures();
         void placeFigure(int id, const std::string& type, int colourId, int x, int y);
         void onFigureClicked(wxMouseEvent& ev);
@@ -26,6 +31,7 @@ namespace chessGUI {
         constexpr static uint16_t s_redId = 1;
         constexpr static uint16_t s_blueId = 7;
 
+        std::shared_ptr<Launcher> launcher;
         std::array<ChessField, 64> fields;
     };
 }

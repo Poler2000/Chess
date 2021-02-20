@@ -11,6 +11,9 @@
 namespace comm {
     class Connector;
 }
+namespace chessGUI {
+    class ChessFrame;
+}
 
 class Launcher : public wxApp {
 public:
@@ -20,10 +23,10 @@ public:
     Launcher();
 
     void processMessage(const comm::Message &msg);
-   // void addMessageToQueue(const comm::Message& msg);
     void addMessageToQueue(std::shared_ptr<comm::Message> msg);
 
     void monitorMessages();
+    void processFigureSelection(int id);
 
 private:
     constexpr static unsigned int s_defaultPort = 8080;

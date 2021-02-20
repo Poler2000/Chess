@@ -26,7 +26,7 @@ bool Launcher::OnInit() {
     m_mainMenu->Show(true);
 
     m_connector->send(newMsg);
-    m_chessFrame = new chessGUI::ChessFrame();
+    m_chessFrame = new chessGUI::ChessFrame(std::shared_ptr<Launcher>(this));
 
     return wxAppConsoleBase::OnInit();
 }
@@ -129,4 +129,10 @@ void Launcher::monitorMessages() {
             std::cout << "MESSAGE POP!\n";
         }
     }
+}
+
+void Launcher::processFigureSelection(const int id) {
+    comm::Message msg("PieceSelectedMsg");
+    msg.addField("id", id);
+    m_connector->send(msg);
 }

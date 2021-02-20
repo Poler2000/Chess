@@ -34,4 +34,12 @@ namespace chessGUI {
     void ChessField::resetImage() {
         m_image.UnRef();
     }
+
+    void ChessField::setFigureId(const int id) {
+        m_figureId = id;
+    }
+
+    int ChessField::getFigureId() const {
+        return m_figureId;
+    }
 }
