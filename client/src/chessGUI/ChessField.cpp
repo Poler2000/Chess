@@ -13,11 +13,13 @@ namespace chessGUI {
 
     void ChessField::paintEvent(wxPaintEvent &evt) {
         wxPaintDC dc(this);
-        m_scale = fmin(this->GetSize().GetWidth() / m_image.GetWidth(),
-                            this->GetSize().GetHeight() / m_image.GetHeight());
-        dc.SetUserScale(m_scale, m_scale);
-        if(m_image.IsOk())
-        render(dc);
+
+        if (m_image.IsOk()) {
+            m_scale = fmin(this->GetSize().GetWidth() / m_image.GetWidth(),
+                           this->GetSize().GetHeight() / m_image.GetHeight());
+            dc.SetUserScale(m_scale, m_scale);
+            render(dc);
+        }
     }
 
     void ChessField::render(wxDC &dc) {
@@ -27,5 +29,9 @@ namespace chessGUI {
 
     void ChessField::setImage(wxString file, wxBitmapType format) {
         m_image.LoadFile(file, format);
+    }
+
+    void ChessField::resetImage() {
+        m_image.UnRef();
     }
 }

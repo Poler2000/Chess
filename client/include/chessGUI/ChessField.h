@@ -13,6 +13,7 @@ namespace chessGUI {
         void paintEvent(wxPaintEvent & evt);
         void render(wxDC& dc);
         void setImage(wxString file, wxBitmapType format);
+        void resetImage();
     private:
         wxBitmap m_image;
     DECLARE_EVENT_TABLE()

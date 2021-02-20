@@ -5,7 +5,8 @@
 
 namespace logic {
     class ComputerPlayer : public AbstractPlayer {
-
+    public:
+        ComputerPlayer(uint16_t i);
     };
 }
 

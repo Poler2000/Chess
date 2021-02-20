@@ -2,16 +2,19 @@
 
 namespace logic {
 
+    AbstractPlayer::AbstractPlayer(const bool playing, const int fd, uint16_t colourId)
+        : m_playing(playing), m_fd(fd), m_colourId(colourId) {}
+
     bool AbstractPlayer::isPlaying() const {
-        return false;
+        return m_playing;
     }
 
     std::vector<std::shared_ptr<structure::Figure>> AbstractPlayer::getFigures() const {
-        return std::vector<std::shared_ptr<structure::Figure>>();
+        return m_figureSet;
     }
 
     uint16_t AbstractPlayer::getColour() const {
-        return 0;
+        return m_colourId;
     }
 
     structure::Move AbstractPlayer::getMove() const {
@@ -19,6 +22,10 @@ namespace logic {
     }
 
     int AbstractPlayer::getFd() const {
-        return 0;
+        return m_fd;
+    }
+
+    void AbstractPlayer::setFigures(std::vector<std::shared_ptr<structure::Figure>> figures) {
+        m_figureSet = std::move(figures);
     }
 }

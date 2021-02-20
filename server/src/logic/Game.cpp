@@ -117,11 +117,16 @@ namespace logic {
 
     void Game::startGame() {
         if (gameState == GameStates::ONE_PLAYER_READY) {
-            m_players.emplace_back(new ComputerPlayer());
+            m_players.emplace_back(new ComputerPlayer(structure::PieceFactory::getRedId()));
         }
-        else {
-
-        }
+        std::for_each(m_players.begin(), m_players.end(), [](auto& p) {
+            if (p->getColour() == structure::PieceFactory::getBlueId()) {
+                p->setFigures(structure::PieceFactory::getBlue());
+            }
+            else if (p->getColour() == structure::PieceFactory::getRedId()) {
+                p->setFigures(structure::PieceFactory::getRed());
+            }
+        });
         std::cout << "starting game!\n";
         gameState = GameStates::RUNNING;
         processGameState();
@@ -177,7 +182,7 @@ namespace logic {
         msg2.addField("players", (int)m_players.size());
         msg.addField("gameState", (int)gameState);
         msg2.addField("gameState", (int)gameState);
-
+        std::cout << figures.size() << '\n';
         std::for_each(figures.begin(), figures.end(), [&](auto& f) {
             msg.template addField("figure", structure::FigureData(f));
             msg2.template addField("figure", structure::FigureData(f));

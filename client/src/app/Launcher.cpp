@@ -69,6 +69,16 @@ void Launcher::processMessage(const comm::Message& msg) {
             }
             break;
         case hash("GameStateMsg"):
+            m_chessFrame->resetFigures();
+            try {
+                auto figures = msg.getFigureConfig();
+                for (auto& f : figures) {
+                    m_chessFrame->placeFigure(f.id, f.pieceType, f.colourId, f.x, f.y);
+                }
+            }
+            catch (comm::CommException& ex) {
+                std::cout << ex.what() << '\n';
+            }
             break;
         case hash("PossibleMovesMsg"):
             break;

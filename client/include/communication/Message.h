@@ -1,6 +1,8 @@
 #ifndef CHESS_MESSAGE_H
 #define CHESS_MESSAGE_H
 
+#include "structure/chessPoint.h"
+#include "structure/FigureData.h"
 #include <string>
 #include <vector>
 #include <variant>
@@ -12,9 +14,10 @@
 #include <cereal/types/string.hpp>
 
 namespace comm {
+
     struct Message {
         std::string type;
-        std::vector<std::pair<std::string, std::variant<std::string, int>>> content;
+        std::vector<std::pair<std::string, std::variant<std::string, int, structure::chessPoint, structure::FigureData>>> content;
 
         explicit Message(std::string type) : type(std::move(type)){}
 
@@ -88,6 +91,22 @@ namespace comm {
                 if (it->first == identifier) {
                     try {
                         result.emplace_back(std::get<int>(it->second));
+                    }
+                    catch(std::bad_variant_access& ex) {
+                        throw ex;
+                    }
+                }
+            }
+            return result;
+        }
+
+        [[nodiscard]] std::vector<structure::FigureData> getFigureConfig() const noexcept(false) {
+            std::vector<structure::FigureData> result;
+            for(auto it = content.begin(); it != content.end(); it++) {
+                std::cout << it->first << "\n";
+                if (it->first == "figure") {
+                    try {
+                        result.emplace_back(std::get<structure::FigureData>(it->second));
                     }
                     catch(std::bad_variant_access& ex) {
                         throw ex;
