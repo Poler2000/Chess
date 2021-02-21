@@ -36,6 +36,9 @@ namespace logic {
         gmMutex.lock();
         m_games.emplace_back(Game());
         m_games.back().init();
+        std::thread r(&logic::Game::runGame, m_games.back());
+        r.detach();
+
         comm::Message msg("ReconnectMsg");
         msg.addField("port", m_games.back().getPort());
         m_communicationCentre->send(msg, clientFd);

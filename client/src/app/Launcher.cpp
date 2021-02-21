@@ -132,7 +132,7 @@ void Launcher::handlePositions(const comm::Message &msg) {
 }
 
 void Launcher::processMove(const int id, const int x, const int y) {
-    comm::Message msg("MovedMsg");
+    comm::Message msg("MoveMsg");
     msg.addField("move", structure::Move{id, x, y});
     m_connector->send(msg);
 }

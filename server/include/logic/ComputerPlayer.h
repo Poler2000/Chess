@@ -9,6 +9,8 @@ namespace logic {
         ComputerPlayer(uint16_t i);
 
         void setMove(structure::Move move) override;
+
+        structure::Move getMove() override;
     };
 }
 

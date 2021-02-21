@@ -36,10 +36,12 @@ namespace chessGUI {
     }
 
     void ChessField::setFigureId(const int id) {
+        std::cout << "id set to: " << id << '\n';
         m_figureId = id;
     }
 
     int ChessField::getFigureId() const {
+        std::cout << "returning id: " << m_figureId << '\n';
         return m_figureId;
     }
 }

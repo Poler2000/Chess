@@ -8,4 +8,8 @@ namespace logic {
     void ComputerPlayer::setMove(structure::Move move) {
 
     }
+
+    structure::Move ComputerPlayer::getMove() {
+        return structure::Move();
+    }
 }

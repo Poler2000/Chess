@@ -17,10 +17,6 @@ namespace logic {
         return m_colourId;
     }
 
-    structure::Move AbstractPlayer::getMove() const {
-        return structure::Move();
-    }
-
     int AbstractPlayer::getFd() const {
         return m_fd;
     }

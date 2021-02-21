@@ -37,10 +37,10 @@ namespace logic {
 
         bool canAddClient() const;
         void addMessageToQueue(const comm::Message& msg, const int clientFd);
+        void runGame();
     private:
         void processMessage(const comm::Message &msg, const int clientFd);
         void monitorMessages();
-        void runGame();
 
         std::vector<std::shared_ptr<AbstractPlayer>> m_players;
         const uint32_t m_id;

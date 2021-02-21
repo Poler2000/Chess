@@ -37,6 +37,7 @@ namespace chessGUI {
 
         std::shared_ptr<Launcher> launcher;
         std::array<ChessField, 64> fields;
+        int m_currentFigureId;
     };
 }
 

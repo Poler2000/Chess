@@ -45,6 +45,7 @@ namespace chessGUI {
             p = (i % 8 == 0) ? -p + 1 : p;
         });
         fields[ev.GetId() - 10001].SetOwnBackgroundColour(*wxGREEN);
+        m_currentFigureId = fields[ev.GetId() - 10001].getFigureId();
         launcher->processFigureSelection(fields[ev.GetId() - 10001].getFigureId());
     }
 
@@ -57,7 +58,9 @@ namespace chessGUI {
     void ChessFrame::onFieldClicked(wxMouseEvent& ev) {
         int x = (ev.GetId() - 10001) % 8;
         int y = (ev.GetId() - 10001) / 8;
-        launcher->processMove(fields[ev.GetId() - 10001].getFigureId(), x, y);
+        if (m_currentFigureId > -1) {
+            launcher->processMove(m_currentFigureId, x, y);
+        }
     }
 
 }

@@ -99,6 +99,8 @@ namespace logic {
             for (auto& p : m_players) {
                 if (m_turnOfColour == p->getColour()) {
                     auto move = p->getMove();
+                    std::cout << "got move!\n";
+
                     if (m_moveValidator->isValid(move)) {
                         update(move);
                     }
@@ -131,6 +133,8 @@ namespace logic {
     }
 
     void Game::update(structure::Move move) {
+        std::cout << "Moving!\n";
+
         auto figures = getAllFigures();
         auto figToMove = std::find_if(figures.begin(), figures.end(), [&](auto& f){
             return move.pieceId == f->getId();
@@ -232,12 +236,14 @@ namespace logic {
     }
 
     void Game::processMoveMsg(structure::Move move) {
+        std::cout << move.pieceId << " Move processing!\n";
         for (auto& p : m_players) {
             auto figures = p->getFigures();
             auto it = std::find_if(figures.begin(), figures.end(), [&](auto& f) {
                 return f->getId() == move.pieceId;
             });
             if (it < figures.end()) {
+                std::cout << "Move setting!\n";
                 p->setMove(move);
             }
         }
