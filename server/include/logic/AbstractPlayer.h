@@ -16,6 +16,7 @@ namespace logic {
         [[nodiscard]] uint16_t getColour() const;
         [[nodiscard]] structure::Move getMove() const;
         void setFigures(std::vector<std::shared_ptr<structure::Figure>> figures);
+        virtual void setMove(structure::Move move) = 0;
         int getFd() const;
     protected:
         std::vector<std::shared_ptr<structure::Figure>> m_figureSet;

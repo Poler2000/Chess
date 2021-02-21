@@ -7,7 +7,6 @@ namespace comm {
         : ServerConnector(generateId() + 8080), game(game) {}
 
     void ClientConnector::handleConnection(int sockFd) {
-        std::cout << "HANDLING\n";
         while(true) {
             std::cout << "waiting!";
             char buff[256];
@@ -15,7 +14,6 @@ namespace comm {
                 break;
             }
             if (buff[0] == '\0') {
-                std::cout << "NO MSG!\n";
                 continue;
             }
             std::cout << buff << '\n';

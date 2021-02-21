@@ -65,6 +65,8 @@ namespace logic {
         void handleRegister(const std::string &role, const int fd);
 
         std::vector<std::shared_ptr<structure::Figure>> getAllFigures();
+
+        void processMoveMsg(structure::Move move);
     };
 }
 

@@ -21,6 +21,7 @@ namespace chessGUI {
         void resetFigures();
         void placeFigure(int id, const std::string& type, int colourId, int x, int y);
         void onFigureClicked(wxMouseEvent& ev);
+        void onFieldClicked(wxMouseEvent& ev);
 
         void enableMoveTo(int x, int y);
 

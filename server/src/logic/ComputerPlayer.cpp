@@ -4,4 +4,8 @@ namespace logic {
 
     ComputerPlayer::ComputerPlayer(const uint16_t colourId)
         : AbstractPlayer(true, 0, colourId) {}
+
+    void ComputerPlayer::setMove(structure::Move move) {
+
+    }
 }

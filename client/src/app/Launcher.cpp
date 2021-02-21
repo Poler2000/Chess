@@ -40,27 +40,19 @@ void Launcher::processMessage(const comm::Message& msg) {
             break;
         case hash("ReconnectMsg"):
             if (msg.hasField("port")) {
-                std::cout << "Port: " << msg.getInt("port") << '\n';
 
                 int port = msg.getInt("port");
                 sleep(1);
                 m_connector.reset();
                 m_connector = std::make_unique<comm::Connector>(port, this);
-                std::cout << "Ello\n";
 
                 m_connector->connect();
                 comm::Message newMsg("RegisterMsg");
                 newMsg.addField("role", m_role);
                 m_connector->send(newMsg);
-                std::cout << "Port: " << msg.getInt("port") << '\n';
-                std::cout << "Ello\n";
                 m_mainMenu->Disable();
 
-                std::cout << "Showing\n";
-
                 m_chessFrame->Show();
-
-                std::cout << "Shown\n";
 
                 // TODO refactor
                 comm::Message startGameMsg("StartGameMsg");
@@ -87,11 +79,9 @@ void Launcher::processMessage(const comm::Message& msg) {
             std::cout << "Incorrect message type\n";
             break;
     }
-    std::cout << "Received\n";
 }
 
 void Launcher::requestNewGame() {
-    std::cout << "new game!\n";
     comm::Message newMsg("CreateGameMsg");
     m_connector->send(newMsg);
 }
@@ -101,7 +91,6 @@ Launcher::Launcher() : m_connector(std::make_unique<comm::Connector>(s_defaultPo
 int Launcher::OnRun() {
     std::thread q(&Launcher::monitorMessages, this);
     std::thread t(&Launcher::processOption, this);
-    std::cout << "I'm here\n";
     return wxAppBase::OnRun();
 }
 
@@ -123,11 +112,8 @@ void Launcher::addMessageToQueue(std::shared_ptr<comm::Message> msg) {
 void Launcher::monitorMessages() {
     while (true) {
         if (!msgQueue.empty()) {
-            std::cout << "MESSAGE!\n";
             processMessage(*msgQueue.front());
-            std::cout << "MESSAGE END!\n";
             msgQueue.pop();
-            std::cout << "MESSAGE POP!\n";
         }
     }
 }
@@ -143,4 +129,10 @@ void Launcher::handlePositions(const comm::Message &msg) {
     for (auto& p : positions) {
         m_chessFrame->enableMoveTo(p.x, p.y);
     }
+}
+
+void Launcher::processMove(const int id, const int x, const int y) {
+    comm::Message msg("MovedMsg");
+    msg.addField("move", structure::Move{id, x, y});
+    m_connector->send(msg);
 }

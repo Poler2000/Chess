@@ -17,7 +17,6 @@ namespace comm {
                 break;
             }
             if (buff[0] == '\0') {
-                std::cout << "NO MSG!\n";
                 continue;
             }
             std::cout << buff << '\n';
@@ -34,7 +33,6 @@ namespace comm {
                 return;
             }
         }
-        std::cout << "I'm being closed!";
         close(sockFd);
     }
 

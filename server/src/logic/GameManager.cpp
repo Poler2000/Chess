@@ -72,7 +72,6 @@ namespace logic {
                 std::cout << "Incorrect message type\n";
                 break;
         }
-        std::cout << "Received\n";
     }
 
     void GameManager::addClientToGame(const int gameId, const int clientFd) {
@@ -112,7 +111,7 @@ namespace logic {
     void GameManager::monitorMessages() {
         while (true) {
             if (!m_msgQueue.empty()) {
-                std::cout << "MessageToprocess: " << m_msgQueue.front().first.getType();
+                std::cout << "MessageToprocess: " << m_msgQueue.front().first.getType() << '\n';
                 processMessage(m_msgQueue.front().first, m_msgQueue.front().second);
                 m_msgQueue.pop();
             }

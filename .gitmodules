@@ -4,3 +4,6 @@
 [submodule "vendor/googletest"]
 	path = vendor/googletest
 	url = https://github.com/google/googletest.git
+[submodule "Chess/vendor/wxWidgets"]
+	path = Chess/vendor/wxWidgets
+	url = https://github.com/wxWidgets/wxWidgets

@@ -40,7 +40,6 @@ namespace logic {
                 break;
             case hash("StartGameMsg"):
                 if (gameState > GameStates::NO_PLAYERS) {
-                    std::cout << "ELLLLO !\n";
                     startGame();
                  }
                 break;
@@ -48,7 +47,7 @@ namespace logic {
                 processFigureSelection(msg.getInt("id"), clientFd);
                 break;
             case hash("MoveMsg"):
-
+                processMoveMsg(msg.getMove());
                 break;
             default:
                 std::cout << "Incorrect message type\n";
@@ -118,16 +117,15 @@ namespace logic {
         if (gameState == GameStates::ONE_PLAYER_READY) {
             m_players.emplace_back(new ComputerPlayer(structure::PieceFactory::getRedId()));
         }
-        std::for_each(m_players.begin(), m_players.end(), [](auto& p) {
+        std::for_each(m_players.begin(), m_players.end(), [&](auto& p) {
             if (p->getColour() == structure::PieceFactory::getBlueId()) {
-                p->setFigures(structure::PieceFactory::getBlue());
+                p->setFigures(structure::PieceFactory::getBlue(m_fields));
             }
             else if (p->getColour() == structure::PieceFactory::getRedId()) {
-                p->setFigures(structure::PieceFactory::getRed());
+                p->setFigures(structure::PieceFactory::getRed(m_fields));
             }
         });
         m_turnOfColour = structure::PieceFactory::getBlueId();
-        std::cout << "starting game!\n";
         gameState = GameStates::RUNNING;
         processGameState();
     }
@@ -151,20 +149,16 @@ namespace logic {
     }
 
     void Game::processFigureSelection(const int pieceId, const int clientFd) {
-        std::cout << "Hello begins\n";
         for (auto& p : m_players) {
             auto figures = p->getFigures();
             if (m_turnOfColour == p->getColour()) {
                 auto it = std::find_if(figures.begin(), figures.end(), [pieceId](auto& piece) {
-                    std::cout << "Hello searching\n";
                     return piece->getId() == pieceId;
                 });
                 if (it >= figures.end()) {
-                    std::cout << "Hello stops\n";
                     continue;
                 }
                 auto possibilities = it->get()->getPossibleMovements(m_fields);
-                std::cout << "Hello continues\n";
 
                 comm::Message newMsg("PossibleMovesMsg");
                 std::for_each(possibilities.begin(), possibilities.end(), [&](structure::chessPoint point) {
@@ -199,11 +193,9 @@ namespace logic {
         });
         msg.addField("yourTurn", 0);
         msg2.addField("yourTurn", 1);
-        std::cout << "prepared game report!\n";
 
         std::for_each(m_players.begin(), m_players.end(), [&](auto& p) {
             if (m_turnOfColour == p->getColour()) {
-                std::cout << "sending game report!\n";
                 m_connector->send(msg2, p->getFd());
             }
             else {
@@ -215,7 +207,6 @@ namespace logic {
     void Game::handleRegister(const std::string& role, const int fd) {
         static bool isThereFirst = false;
         if (role == "player") {
-            std::cout << "new player!\n";
             m_players.emplace_back(new HumanPlayer(true, fd, isThereFirst ?
                 structure::PieceFactory::getRedId() : structure::PieceFactory::getBlueId()));
             if (isThereFirst) {
@@ -238,6 +229,18 @@ namespace logic {
             figures.insert(figures.end(), figs.begin(), figs.end());
         });
         return figures;
+    }
+
+    void Game::processMoveMsg(structure::Move move) {
+        for (auto& p : m_players) {
+            auto figures = p->getFigures();
+            auto it = std::find_if(figures.begin(), figures.end(), [&](auto& f) {
+                return f->getId() == move.pieceId;
+            });
+            if (it < figures.end()) {
+                p->setMove(move);
+            }
+        }
     }
 }
 

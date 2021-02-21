@@ -24,13 +24,11 @@ namespace comm {
         if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
             throw CommException("Invalid address");
         }
-        std::cout << "QWERTY\n";
 
         if (::connect(m_sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
             perror("Connect");
             throw CommException("Couldn't establish connection");
         }
-        std::cout << "QWERTY\n";
 
         handler = std::thread(&Connector::handleConnection, this);
     }
@@ -47,7 +45,6 @@ namespace comm {
             else if (buff[0] == '\0') {
                 continue;
             }
-
 
             std::cout << "received input!\n";
             std::cout << buff << '\n';
@@ -67,7 +64,6 @@ namespace comm {
             launcher->addMessageToQueue(msg);
 
             if (msg->getType() == "ReconnectMsg") {
-                std::cout << "Reconnect\n";
                 break;
             }
         }
@@ -84,10 +80,8 @@ namespace comm {
     }
 
     Connector::~Connector() {
-        std::cout << "closing!\n";
         close(m_sock);
         handler.join();
-        std::cout << "closing!\n";
     }
 
     void Connector::stopListening() {

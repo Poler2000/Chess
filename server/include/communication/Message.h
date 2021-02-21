@@ -3,6 +3,7 @@
 
 #include "structure/chessPoint.h"
 #include "structure/FigureData.h"
+#include "structure/Move.h"
 #include <string>
 #include <vector>
 #include <variant>
@@ -17,7 +18,7 @@ namespace comm {
 
     struct Message {
         std::string type;
-        std::vector<std::pair<std::string, std::variant<std::string, int, structure::chessPoint, structure::FigureData>>> content;
+        std::vector<std::pair<std::string, std::variant<std::string, int, structure::chessPoint, structure::Move, structure::FigureData>>> content;
 
         explicit Message(std::string type) : type(std::move(type)){}
 
@@ -68,6 +69,20 @@ namespace comm {
                 }
             }
             return "";
+        }
+
+        [[nodiscard]] structure::Move getMove() const {
+            for(auto it = content.begin(); it != content.end(); it++) {
+                if (it->first == "move") {
+                    try {
+                        return std::get<structure::Move>(it->second);
+                    }
+                    catch(std::bad_variant_access& ex) {
+                        throw ex;
+                    }
+                }
+            }
+            return structure::Move();
         }
     };
 }

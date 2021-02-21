@@ -13,9 +13,9 @@ namespace structure {
             auto matching = fields | std::views::filter([&](auto& f) {
                 return m_colourId == PieceFactory::getRedId() ?
                        ((f->getX() == getX()) || (abs(f->getX() - (int)getX()) < 2 &&
-                       f->isOccupiedBy() == PieceFactory::getBlueId())) && f->getY() + 1 == getY() :
+                       f->isOccupiedBy() == PieceFactory::getBlueId())) && f->getY() - 1 == getY() :
                        ((f->getX() == getX()) || (abs(f->getX() - (int)getX()) < 2 &&
-                       f->isOccupiedBy() == PieceFactory::getRedId())) && f->getY() - 1 == getY();
+                       f->isOccupiedBy() == PieceFactory::getRedId())) && f->getY() + 1 == getY();
             });
             std::for_each(matching.begin(), matching.end(), [&](auto& f){
                 if (f->isOccupiedBy() != m_colourId) {

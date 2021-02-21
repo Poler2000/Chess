@@ -27,6 +27,7 @@ public:
 
     void monitorMessages();
     void processFigureSelection(int id);
+    void processMove(int id, int x, int y);
 
 private:
     constexpr static unsigned int s_defaultPort = 8080;

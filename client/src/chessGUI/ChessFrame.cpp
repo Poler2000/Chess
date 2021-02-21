@@ -35,7 +35,8 @@ namespace chessGUI {
         std::string path = std::string("../resources/") + colour + type + std::string(".png");
         fields[8 * y + x].setFigureId(id);
         fields[8 * y + x].setImage(path, wxBITMAP_TYPE_PNG);
-        fields[8 * y + x].Connect(fields[8 * y + x].GetId(), wxEVT_LEFT_DOWN, wxMouseEventHandler(ChessFrame::onFigureClicked), NULL, this );
+        fields[8 * y + x].Connect(fields[8 * y + x].GetId(), wxEVT_LEFT_DOWN, wxMouseEventHandler(ChessFrame::onFigureClicked),
+                                  nullptr, this );
     }
 
     void ChessFrame::onFigureClicked(wxMouseEvent& ev) {
@@ -49,6 +50,14 @@ namespace chessGUI {
 
     void ChessFrame::enableMoveTo(const int x, const int y) {
         fields[8 * y + x].SetBackgroundColour(*wxBLUE);
+        fields[8 * y + x].Connect(fields[8 * y + x].GetId(), wxEVT_LEFT_DOWN, wxMouseEventHandler(ChessFrame::onFieldClicked),
+                                  nullptr, this );
+    }
+
+    void ChessFrame::onFieldClicked(wxMouseEvent& ev) {
+        int x = (ev.GetId() - 10001) % 8;
+        int y = (ev.GetId() - 10001) / 8;
+        launcher->processMove(fields[ev.GetId() - 10001].getFigureId(), x, y);
     }
 
 }

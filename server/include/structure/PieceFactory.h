@@ -10,14 +10,14 @@ namespace structure {
 
     class PieceFactory {
     public:
-        static std::vector<std::shared_ptr<Figure>> getRed();
-        static std::vector<std::shared_ptr<Figure>> getBlue();
+        static std::vector<std::shared_ptr<Figure>> getRed(std::vector<std::shared_ptr<Field>> fields);
+        static std::vector<std::shared_ptr<Figure>> getBlue(std::vector<std::shared_ptr<Field>> fields);
         static uint16_t getRedId();
         static uint16_t getBlueId();
     private:
         constexpr static uint16_t s_redId = 1;
         constexpr static uint16_t s_blueId = 7;
-        static std::vector<std::shared_ptr<Figure>> constructPieces(uint16_t colour);
+        static std::vector<std::shared_ptr<Figure>> constructPieces(uint16_t colour, std::vector<std::shared_ptr<Field>> fields);
     };
 }
 
