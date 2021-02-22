@@ -24,7 +24,7 @@ namespace logic {
         uint16_t m_colourId;
         bool m_playing;
         int m_fd;
-        structure::Move m_currentMove;
+        structure::Move m_currentMove{-1, -1, -1};
     private:
     };
 }

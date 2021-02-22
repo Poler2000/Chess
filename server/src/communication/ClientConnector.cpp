@@ -18,13 +18,22 @@ namespace comm {
             }
             std::cout << buff << '\n';
             std::string file(buff);
-            std::ifstream is(file);
-            cereal::JSONInputArchive archive(is);
+            try {
+                std::ifstream is(file);
+                cereal::JSONInputArchive archive(is);
 
-            comm::Message msg("");
-            archive(msg);
-            std::cout << "Got msg: " << msg.getType() << '\n';
-            game->addMessageToQueue(msg, sockFd);
+                comm::Message msg("");
+
+                archive(msg);
+                std::cout << "Got msg: " << msg.getType() << '\n';
+                game->addMessageToQueue(msg, sockFd);
+                if (msg.getType() == "CreateGameMsg") {
+                    return;
+                }
+            }
+            catch (cereal::RapidJSONException& ex) {
+                std::cout << ex.what();
+            }
         }
         close(sockFd);
     }

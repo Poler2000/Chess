@@ -23,6 +23,7 @@ namespace chessGUI {
     }
 
     void ChessFrame::resetFigures() {
+
         std::for_each(fields.begin(), fields.end(), [&](auto& field) {
             field.resetImage();
             field.setFigureId(-1);
@@ -37,6 +38,7 @@ namespace chessGUI {
         fields[8 * y + x].setImage(path, wxBITMAP_TYPE_PNG);
         fields[8 * y + x].Connect(fields[8 * y + x].GetId(), wxEVT_LEFT_DOWN, wxMouseEventHandler(ChessFrame::onFigureClicked),
                                   nullptr, this );
+        this->Refresh();
     }
 
     void ChessFrame::onFigureClicked(wxMouseEvent& ev) {
@@ -56,6 +58,10 @@ namespace chessGUI {
     }
 
     void ChessFrame::onFieldClicked(wxMouseEvent& ev) {
+        std::for_each(fields.begin(), fields.end(), [&, i = 0, p = 0](auto& field) mutable {
+            field.SetBackgroundColour((++i % 2 == p) ? *wxBLACK : *wxWHITE);
+            p = (i % 8 == 0) ? -p + 1 : p;
+        });
         int x = (ev.GetId() - 10001) % 8;
         int y = (ev.GetId() - 10001) / 8;
         if (m_currentFigureId > -1) {
