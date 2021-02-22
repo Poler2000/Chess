@@ -73,6 +73,7 @@ namespace comm {
         std::cout << "I'm sending " << msg.getType() << '\n';
         std::string file = std::to_string(m_sock);
         std::string newMsg = "../../messages/" + file;
+        std::cout << newMsg << '\n';
         std::ofstream os(newMsg);
         cereal::JSONOutputArchive archive(os);
         archive(msg);

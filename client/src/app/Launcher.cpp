@@ -55,6 +55,7 @@ void Launcher::processMessage(const comm::Message& msg) {
                 m_chessFrame->Show();
 
                 // TODO refactor
+                usleep(2000);
                 comm::Message startGameMsg("StartGameMsg");
                 m_connector->send(startGameMsg);
 

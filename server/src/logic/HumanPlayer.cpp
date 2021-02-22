@@ -1,3 +1,4 @@
+#include <iostream>
 #include "logic/HumanPlayer.h"
 
 namespace logic {
@@ -16,7 +17,8 @@ namespace logic {
             m_mtx.lock();
             m_mtx.unlock();
         }
+        structure::Move move = m_currentMove;
         m_currentMove = {-1,-1,-1};
-        return structure::Move();
+        return move;
     }
 }

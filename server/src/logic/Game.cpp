@@ -1,6 +1,7 @@
 #include <communication/Message.h>
 
 #include <memory>
+#include <unistd.h>
 #include "../../include/logic/Game.h"
 #include "structure/FigureData.h"
 
@@ -39,7 +40,7 @@ namespace logic {
                 handleRegister(msg.getString("role"), clientFd);
                 break;
             case hash("StartGameMsg"):
-                if (gameState > GameStates::NO_PLAYERS) {
+                if (getState() > GameStates::NO_PLAYERS) {
                     startGame();
                  }
                 break;
@@ -56,7 +57,7 @@ namespace logic {
     }
 
     void Game::init() {
-        gameState = GameStates::NO_PLAYERS;
+        setState(GameStates::NO_PLAYERS);
         m_connector = std::make_shared<comm::ClientConnector>(this);
         createFields();
         m_moveValidator = std::make_unique<MoveValidator>(m_fields);
@@ -65,6 +66,8 @@ namespace logic {
         t.detach();
         std::thread q(&comm::ServerConnector::startListening, m_connector, 8);
         q.detach();
+        std::thread r(&logic::Game::runGame, this);
+        r.detach();
     }
 
     Game::Game() : m_id(0) {}
@@ -94,8 +97,18 @@ namespace logic {
     }
 
     void Game::runGame() {
-        while (gameState < GameStates::RUNNING) ;
-        while (gameState ==  GameStates::RUNNING) {
+        volatile int i = gameState;
+        while (getState() != GameStates::RUNNING) {
+            m_mtx.lock();
+                std::cout << "HELLO\n";
+                std::cout << getState();
+                std::cout << GameStates::RUNNING;
+            m_mtx.unlock();
+            sleep(1);
+        }
+        std::cout << "hello\n";
+        while (getState() ==  GameStates::RUNNING) {
+            std::cout << "waiting for move\n";
             for (auto& p : m_players) {
                 if (m_turnOfColour == p->getColour()) {
                     auto move = p->getMove();
@@ -116,7 +129,8 @@ namespace logic {
     }
 
     void Game::startGame() {
-        if (gameState == GameStates::ONE_PLAYER_READY) {
+        std::cout << "STARTTTTTTTTTTTTT\n";
+        if (getState() == GameStates::ONE_PLAYER_READY) {
             m_players.emplace_back(new ComputerPlayer(structure::PieceFactory::getRedId()));
         }
         std::for_each(m_players.begin(), m_players.end(), [&](auto& p) {
@@ -127,12 +141,19 @@ namespace logic {
                 p->setFigures(structure::PieceFactory::getRed(m_fields));
             }
         });
+
         m_turnOfColour = structure::PieceFactory::getBlueId();
-        gameState = GameStates::RUNNING;
+        m_mtx.lock();
+        setState(GameStates::RUNNING);
+        std::cout << "Game state now: " << getState() << '\n';
+        m_mtx.unlock();
         processGameState();
     }
 
     void Game::update(structure::Move move) {
+        std::cout << "Moving!\n";
+        std::cout << move.destX;
+        std::cout << move.destY;
         std::cout << "Moving!\n";
 
         auto figures = getAllFigures();
@@ -149,7 +170,14 @@ namespace logic {
             return move.destX == f->getX() &&
                     move.destY == f->getY();
         })->get()->setOccupied(figToMove->get()->getColour());
+
+        std::cout << "Moving!\n";
+        std::cout << move.destX;
+        std::cout << move.destY;
+        std::cout << "Moving!\n";
+
         figToMove->get()->move(move.destX, move.destY);
+        processGameState();
     }
 
     void Game::processFigureSelection(const int pieceId, const int clientFd) {
@@ -214,10 +242,14 @@ namespace logic {
             m_players.emplace_back(new HumanPlayer(true, fd, isThereFirst ?
                 structure::PieceFactory::getRedId() : structure::PieceFactory::getBlueId()));
             if (isThereFirst) {
-                gameState = GameStates::TWO_PLAYERS_READY;
+                setState(GameStates::TWO_PLAYERS_READY);
+                std::cout << "Game state now: " << getState() << '\n';
+
             }
             else {
-                gameState = GameStates::ONE_PLAYER_READY;
+                setState(GameStates::ONE_PLAYER_READY);
+                std::cout << "Game state now: " << getState() << '\n';
+
             }
             isThereFirst = true;
         }
@@ -237,6 +269,7 @@ namespace logic {
 
     void Game::processMoveMsg(structure::Move move) {
         std::cout << move.pieceId << " Move processing!\n";
+
         for (auto& p : m_players) {
             auto figures = p->getFigures();
             auto it = std::find_if(figures.begin(), figures.end(), [&](auto& f) {
@@ -247,6 +280,14 @@ namespace logic {
                 p->setMove(move);
             }
         }
+    }
+
+    GameStates Game::getState() volatile {
+        return gameState;
+    }
+
+    void Game::setState(GameStates state) volatile {
+        gameState = state;
     }
 }
 

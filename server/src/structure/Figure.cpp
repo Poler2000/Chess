@@ -1,3 +1,4 @@
+#include <iostream>
 #include "structure/Figure.h"
 
 namespace structure {
@@ -14,6 +15,7 @@ namespace structure {
     }
 
     void Figure::move(unsigned int x, unsigned int y) {
+        std::cout << "<" << x << '>' << '<' << y << ">\n";
         if (x < 8) {
             m_x = x;
         }

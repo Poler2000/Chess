@@ -5,7 +5,7 @@ namespace logic {
         : fields(fields) {}
 
     bool MoveValidator::isValid(structure::Move move) const {
-        return false;
+        return true;
     }
 }
 

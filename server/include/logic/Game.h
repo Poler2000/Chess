@@ -45,12 +45,15 @@ namespace logic {
         std::vector<std::shared_ptr<AbstractPlayer>> m_players;
         const uint32_t m_id;
         std::mutex m_mtx;
-        GameStates gameState;
+        volatile GameStates gameState;
         std::shared_ptr<comm::ClientConnector> m_connector;
         std::queue<std::pair<comm::Message, const int>> m_msgQueue;
         std::vector<std::shared_ptr<structure::Field>> m_fields;
         std::unique_ptr<MoveValidator> m_moveValidator;
         uint16_t m_turnOfColour;
+
+        GameStates getState() volatile;
+        void setState(GameStates state) volatile;
 
         void checkWinConditions();
 
