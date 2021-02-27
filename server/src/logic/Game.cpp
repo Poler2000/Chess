@@ -164,7 +164,7 @@ namespace logic {
         std::find_if(m_fields.begin(), m_fields.end(), [&](auto& f){
             return figToMove->get()->getX() == f->getX() &&
                     figToMove->get()->getX() == f->getY();
-        })->get()->setOccupied(figToMove->get()->getColour());
+        })->get()->setOccupied(0);
 
         std::find_if(m_fields.begin(), m_fields.end(), [&](auto& f){
             return move.destX == f->getX() &&
@@ -193,7 +193,7 @@ namespace logic {
                 auto possibilities = it->get()->getPossibleMovements(m_fields);
 
                 comm::Message newMsg("PossibleMovesMsg");
-                std::for_each(possibilities.begin(), possibilities.end(), [&](structure::chessPoint point) {
+                std::for_each(possibilities.begin(), possibilities.end(), [&](structure::ChessPoint point) {
                     newMsg.addField("position", point);
                 });
                 m_connector->send(newMsg, clientFd);

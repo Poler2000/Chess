@@ -128,6 +128,7 @@ void Launcher::processFigureSelection(const int id) {
 void Launcher::handlePositions(const comm::Message &msg) {
     auto positions = msg.getPositions();
     for (auto& p : positions) {
+        std::cout << "Position" << p.x << p.y << '\n';
         m_chessFrame->enableMoveTo(p.x, p.y);
     }
 }

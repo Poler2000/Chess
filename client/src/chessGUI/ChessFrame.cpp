@@ -52,6 +52,7 @@ namespace chessGUI {
     }
 
     void ChessFrame::enableMoveTo(const int x, const int y) {
+        std::cout << "enabled move to: " << x << y << '\n';
         fields[8 * y + x].SetBackgroundColour(*wxBLUE);
         fields[8 * y + x].Connect(fields[8 * y + x].GetId(), wxEVT_LEFT_DOWN, wxMouseEventHandler(ChessFrame::onFieldClicked),
                                   nullptr, this );

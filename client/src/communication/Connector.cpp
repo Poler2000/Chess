@@ -4,7 +4,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
-#include "communication/Message.h"
+#include "../../../chessCommon/include/communication/Message.h"
 
 #include <fstream>
 #include <thread>

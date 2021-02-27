@@ -1,9 +1,9 @@
 #ifndef CHESS_MESSAGE_H
 #define CHESS_MESSAGE_H
 
-#include "structure/chessPoint.h"
-#include "structure/FigureData.h"
-#include "structure/Move.h"
+#include "../structure/chessPoint.h"
+#include "../structure/FigureData.h"
+#include "../structure/Move.h"
 #include <string>
 #include <vector>
 #include <variant>
@@ -131,6 +131,20 @@ namespace comm {
                 }
             }
             return result;
+        }
+
+        [[nodiscard]] structure::Move getMove() const {
+            for(auto it = content.begin(); it != content.end(); it++) {
+                if (it->first == "move") {
+                    try {
+                        return std::get<structure::Move>(it->second);
+                    }
+                    catch(std::bad_variant_access& ex) {
+                        throw ex;
+                    }
+                }
+            }
+            return structure::Move();
         }
     };
 }

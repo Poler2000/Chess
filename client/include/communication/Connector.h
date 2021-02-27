@@ -2,7 +2,7 @@
 #define CHESS_CONNECTOR_H
 
 #include <string>
-#include "Message.h"
+#include "../../../chessCommon/include/communication/Message.h"
 #include "app/Launcher.h"
 #include <memory>
 #include <thread>

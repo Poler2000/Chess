@@ -9,7 +9,7 @@
 #include <mutex>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
-#include <communication/Message.h>
+#include "../../../chessCommon/include/communication/Message.h"
 
 #endif
 

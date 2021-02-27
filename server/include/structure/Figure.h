@@ -2,8 +2,8 @@
 #define CHESS_FIGURE_H
 
 #include <cstdint>
-#include "structure/Field.h"
-#include "chessPoint.h"
+#include "structure/chessPoint.h"
+#include "Field.h"
 #include "PieceFactory.h"
 #include <mutex>
 #include <memory>
@@ -120,7 +120,7 @@ namespace structure {
         [[nodiscard]] unsigned int getId() const;
         [[nodiscard]] unsigned int getColour() const;
         [[nodiscard]] virtual std::string getType() const = 0;
-        [[nodiscard]] virtual std::vector<chessPoint> getPossibleMovements(std::vector<std::shared_ptr<Field>> fields) const = 0;
+        [[nodiscard]] virtual std::vector<ChessPoint> getPossibleMovements(std::vector<std::shared_ptr<Field>> fields) const = 0;
 
         void move(unsigned int x, unsigned int y);
     private:

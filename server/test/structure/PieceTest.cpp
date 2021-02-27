@@ -32,7 +32,7 @@ TEST (FigureTest, pieceFullBoard) {
     structure::Figure* pBlue = new structure::Piece(5, 6, structure::PieceFactory::getBlueId());
     auto resBlue = pBlue->getPossibleMovements(fields);
     ASSERT_TRUE(!resBlue.empty());
-    ASSERT_EQ(resBlue.size(), 1);
+    ASSERT_EQ(resBlue.size(), 2);
     structure::Figure* pRed = new structure::Piece(5, 6, structure::PieceFactory::getRedId());
     auto resRed = pRed->getPossibleMovements(fields);
     ASSERT_TRUE(!resRed.empty());

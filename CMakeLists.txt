@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(vendor/cereal/include)
 include_directories(vendor/googletest/googletest/include)
+include_directories(chessCommon/include)
 
 find_package(GTest CONFIG REQUIRED)
 option(PACKAGE_TESTS "Build the tests" ON)
@@ -16,3 +17,4 @@ if(PACKAGE_TESTS)
 endif()
 add_subdirectory("${PROJECT_SOURCE_DIR}/server" "${PROJECT_SOURCE_DIR}/server/server_output")
 add_subdirectory("${PROJECT_SOURCE_DIR}/client" "${PROJECT_SOURCE_DIR}/client/client_output")
+add_subdirectory(vendor/wxWidgets)

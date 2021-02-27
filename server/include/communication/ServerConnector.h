@@ -6,8 +6,8 @@
 #include <netinet/in.h>
 #include <thread>
 #include <iostream>
-#include "Message.h"
-#include "CommException.h"
+#include "communication/Message.h"
+#include "communication/CommException.h"
 
 namespace comm {
     class ServerConnector {
